@@ -91,6 +91,10 @@ def generate_dataset(anno_file, data_dir, save_dir=None, *, split="designed", **
         xs = preprocess_files(_files, **kwargs)
         ys = np.array([[lbl] * kwargs["n_samples"] for lbl in _labels]).flatten()
 
+        ids = list(range(len(ys)))
+        np.random.shuffle(ids)
+        xs, ys = xs[ids], ys[ids]
+
         dataset[dset]["x"] = xs
         dataset[dset]["y"] = ys
 
