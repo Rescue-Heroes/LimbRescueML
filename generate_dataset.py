@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import DefaultDict
+from typing import OrderedDict
 import numpy as np
 import pandas as pd
 
@@ -73,7 +73,7 @@ def preprocess_files(files, **kwargs):
     return np.concatenate(x, axis=0)
 
 
-def generate_dataset(anno_file, data_dir, save_dir=None, *, split="designed", **kwargs):
+def generate_dataset(anno_file, data_dir, save_path=None, *, split="designed", **kwargs):
     anno = pd.read_csv(anno_file)
     files = anno["Filename"].tolist()
     labels = anno["Label"].tolist()
@@ -82,7 +82,7 @@ def generate_dataset(anno_file, data_dir, save_dir=None, *, split="designed", **
     files = [data_dir.joinpath(f"{f}.csv") for f in files]
     del anno
 
-    dataset = DefaultDict(dict)
+    dataset = OrderedDict()
     train_ids, val_ids, test_ids = get_split_ids(len(files), method=split)
     for ids, dset in zip([train_ids, val_ids, test_ids], ["train", "val", "test"]):
         _files = [files[i] for i in ids]
@@ -95,13 +95,13 @@ def generate_dataset(anno_file, data_dir, save_dir=None, *, split="designed", **
         np.random.shuffle(ids)
         xs, ys = xs[ids], ys[ids]
 
-        dataset[dset]["x"] = xs
-        dataset[dset]["y"] = ys
+        dataset[f"X_{dset}"] = xs
+        dataset[f"y_{dset}"] = ys
 
-        if save_dir is not None:
-            save_dir = Path(save_dir)
-            save_dir.mkdir(exist_ok=True)
-            np.savez(save_dir.joinpath(f"{dset}.npz"), x=xs, y=ys)
+    if save_path is not None:
+        save_path = Path(save_path)
+        save_path.parent.mkdir(exist_ok=True)
+        np.savez(save_path, **dataset)
     return dataset
 
 
@@ -124,11 +124,11 @@ def parse_args():
         help="the directory of data files",
     )
     parser.add_argument(
-        "--save-dir",
-        metavar="DIR",
-        default="data",
+        "--save-path",
+        metavar="PATH",
+        default="data/dataset.npz",
         type=Path,
-        help="the directory to save train, validation, and test datesets in npz",
+        help="the path (inclufing file name) to save train, validation, and test datesets in npz",
     )
     parser.add_argument(
         "--split",
@@ -186,7 +186,7 @@ if __name__ == "__main__":
     dataset = generate_dataset(
         args.anno_file,
         args.data_dir,
-        args.save_dir,
+        args.save_path,
         split=args.split,
         head_drop=args.head_drop,
         n_samples=args.n_samples,
@@ -197,5 +197,5 @@ if __name__ == "__main__":
     print("Done. ")
     print("Dateset Statistics: ")
     for dset in ["train", "val", "test"]:
-        n_samples = [(dataset[dset]["y"] == lbl).sum() for lbl in range(1, 4)]
+        n_samples = [(dataset[f"y_{dset}"] == lbl).sum() for lbl in range(1, 4)]
         print("\t{}: {:d} / {:d} / {:d} for label 1 / 2 / 3".format(dset, *n_samples))
