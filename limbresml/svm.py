@@ -15,6 +15,7 @@ data_dir = Path(__file__).resolve().parent.parent
 data_dir = data_dir.joinpath("data")
 X_train, y_train, X_val, y_val, X_test, y_test = get_data(data_dir.joinpath("ns10_ls300_normalized.npz"))
 
+model = svm.SVC
 hyperparameters = OrderedDict(
 	{
 		"kernel": ["linear", "rbf", "poly", "sigmoid"],
@@ -29,7 +30,6 @@ hps = list(hyperparameters.keys())
 choices = list(itertools.product(*list(hyperparameters.values())))
 print(f"Running {len(choices)} experiments with different combinatoin of hyper-parameters...")
 
-model = svm.SVC
 acc_train = 0
 best_val = 0
 acc_test = 0
