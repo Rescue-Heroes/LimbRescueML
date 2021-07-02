@@ -155,7 +155,7 @@ def parse_args():
     parser.add_argument(
         "--len-sample",
         metavar="N",
-        default=10,
+        default=300,
         type=int,
         help="number of data points for each sample",
     )
