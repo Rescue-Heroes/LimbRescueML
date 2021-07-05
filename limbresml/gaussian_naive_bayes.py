@@ -6,7 +6,10 @@ from typing import OrderedDict
 from pathlib import Path
 
 import numpy as np
-from sklearn import svm
+from sklearn.naive_bayes import GaussianNB
+# from sklearn.naive_bayes import CategoricalNB
+# from sklearn.naive_bayes import ComplementNB
+
 from tqdm import tqdm
 
 from utils import get_data
@@ -15,16 +18,35 @@ data_dir = Path(__file__).resolve().parent.parent
 data_dir = data_dir.joinpath("data")
 X_train, y_train, X_val, y_val, X_test, y_test = get_data(data_dir.joinpath("ns10_ls300_normalized.npz"))
 
-model = svm.SVC
+#---COMPLEMENT NAIVE BAYES---
+# model = ComplementNB
+# hyperparameters = OrderedDict(
+# 	{
+# 		"alpha": [1],
+# 		"fit_prior": [True, False],
+# 		"class_prior": [None],
+# 		"norm": [True, False]
+# 	}
+# )
+
+#---CATEGORICAL NAIVE BAYES---
+# model = CategoricalNB
+# hyperparameters = OrderedDict(
+# 	{
+# 		# "alpha": [0,10],
+# 		"fit_prior": [True, False],
+# 		"class_prior": [None],
+# 		"min_categories": [None]
+# 	}
+# )
+
+# ---GAUSSIAN NAIVE BAYES---
+model = GaussianNB
 hyperparameters = OrderedDict(
 	{
-		"kernel": ["linear", "rbf", "poly", "sigmoid"],
-		"degree": list(range(1, 6)),
-		"gamma": ["scale", "auto"],
-		"C": np.linspace(1, 10, num=10).tolist(),
-		"decision_function_shape": ["ovo", "ovr"],
-		"class_weight": ["balanced", None]
-	}	
+		"priors": [None],
+		"var_smoothing": [1E-8, 1E-10, 1E-11, 1E-9, 1E-12]
+	}
 )
 hps = list(hyperparameters.keys())
 choices = list(itertools.product(*list(hyperparameters.values())))
