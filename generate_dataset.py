@@ -1,7 +1,8 @@
-from pathlib import Path
-from typing import OrderedDict
+import itertools
 import numpy as np
 import pandas as pd
+from pathlib import Path
+from typing import OrderedDict
 
 
 def get_split_ids(n, method="designed"):
@@ -58,19 +59,35 @@ def preprocess_single_file(
         )
 
     samples = []
+    metas = []
     for _ in range(n_samples):
         i = np.random.randint(len(left) - len_sample)
         samples.append(left[i : i + len_sample])
         samples.append(right[i : i + len_sample])
+        metas.append(
+            {
+                "file": file.name,
+                "length_from_tail": length,
+                "post_start": i,
+                "post_end": i + len_sample,
+            }
+        )
+        # start_end.append((length, i, i + len_sample))
 
-    return np.concatenate(samples, axis=0).reshape(int(len(samples) / 2), len_sample * 2)
+    samples = np.concatenate(samples, axis=0).reshape(int(len(samples) / 2), len_sample * 2)
+    return samples, metas
 
 
 def preprocess_files(files, **kwargs):
-    x = []
+    xs = []
+    ms = []
     for f in files:
-        x.append(preprocess_single_file(f, **kwargs))
-    return np.concatenate(x, axis=0)
+        x, m = preprocess_single_file(f, **kwargs)
+        xs.append(x)
+        ms.append(m)
+    xs = np.concatenate(xs, axis=0)
+    ms = list(itertools.chain(*ms))
+    return xs, ms
 
 
 def generate_dataset(anno_file, data_dir, save_path=None, *, split="designed", **kwargs):
@@ -88,15 +105,19 @@ def generate_dataset(anno_file, data_dir, save_path=None, *, split="designed", *
         _files = [files[i] for i in ids]
         _labels = [labels[i] for i in ids]
 
-        xs = preprocess_files(_files, **kwargs)
+        xs, ms = preprocess_files(_files, **kwargs)
         ys = np.array([[lbl] * kwargs["n_samples"] for lbl in _labels]).flatten()
+        # fs = np.array([[f.name] * kwargs["n_samples"] for f in _files]).flatten()
 
         ids = list(range(len(ys)))
         np.random.shuffle(ids)
         xs, ys = xs[ids], ys[ids]
+        ms = [ms[i] for i in ids]
 
         dataset[f"X_{dset}"] = xs
         dataset[f"y_{dset}"] = ys
+        dataset[f"meta_{dset}"] = ms
+        # dataset[f"start_end_{dset}"] = ses
 
     if save_path is not None:
         save_path = Path(save_path)
