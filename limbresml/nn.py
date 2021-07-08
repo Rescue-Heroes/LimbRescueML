@@ -11,6 +11,7 @@ from tqdm import tqdm
 
 from utils import get_data
 
+# train / val / test: 0.86 / 0.78 / 0.67
 BEST_HPS = {
     "hidden_layer_sizes": (300,),
     "activation": "logistic",
