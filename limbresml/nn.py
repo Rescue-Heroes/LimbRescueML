@@ -10,6 +10,7 @@ from sklearn.neural_network import MLPClassifier
 from tqdm import tqdm
 
 from utils import get_data
+from utils import save_model
 
 # train / val / test: 0.86 / 0.78 / 0.67
 BEST_HPS = {
@@ -21,12 +22,14 @@ BEST_HPS = {
     "random_state": 0,
     "n_iter_no_change": 1000,
 }
+best_hps = BEST_HPS
 
+model_name = "nn3.joblib"
 data_dir = Path(__file__).resolve().parent.parent
-data_dir = data_dir.joinpath("data")
-X_train, y_train, X_val, y_val, X_test, y_test = get_data(
-    data_dir.joinpath("ns10_ls300_normalized.npz")
-)
+data_dir = data_dir.joinpath("data3")
+dataset = "ns10_ls300_normalized.npz"
+X_train, y_train, X_val, y_val, X_test, y_test = get_data(data_dir.joinpath(dataset))
+
 
 model = MLPClassifier
 hyperparameters = OrderedDict(
@@ -70,6 +73,9 @@ for c in tqdm(choices):
 
 print(f"Best validation accuracy {best_val:.2f} by {str(best_hps)}")
 print(f"train / val / test: {acc_train:.2f} / {best_val:.2f} / {acc_test:.2f}\n")
+
+save_model(model(**best_hps).fit(X_train, y_train), model_name, best_hps, dataset)
+
 
 datasets = sorted(list(data_dir.iterdir()))
 print(f"Running {len(datasets)} experiments with different preprocessing on data...")

@@ -8,12 +8,22 @@ from pathlib import Path
 import numpy as np
 from sklearn import svm
 from tqdm import tqdm
+from joblib import dump, load
 
 from utils import get_data
+from utils import save_model
 
+model_name = "svm2.joblib"
 data_dir = Path(__file__).resolve().parent.parent
-data_dir = data_dir.joinpath("data")
-X_train, y_train, X_val, y_val, X_test, y_test = get_data(data_dir.joinpath("ns10_ls300_normalized.npz"))
+data_dir = data_dir.joinpath("data2")
+dataset = "ns10_ls300_normalized.npz"
+X_train, y_train, X_val, y_val, X_test, y_test = get_data(data_dir.joinpath(dataset))
+
+# for y in [y_train, y_val, y_test]:
+# 	y[y==2] = 4
+# 	y[y==3] = 2
+# 	y[y==4] = 3
+
 
 model = svm.SVC
 hyperparameters = OrderedDict(
@@ -51,7 +61,10 @@ for c in tqdm(choices):
 print(f"Best validation accuracy {best_val:.2f} by {str(best_hps)}")
 print(f"train / val / test: {acc_train:.2f} / {best_val:.2f} / {acc_test:.2f}\n")
 
+save_model(model(**best_hps).fit(X_train, y_train), model_name, best_hps, dataset)
+
 datasets = sorted(list(data_dir.iterdir()))
+
 print(f"Running {len(datasets)} experiments with different preprocessing on data...")
 acc_train = 0
 best_val = 0

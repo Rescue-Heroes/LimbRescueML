@@ -10,6 +10,10 @@ def get_split_ids(n, method="designed"):
         val = set([0, 12, 20, 34, 41, 46])
         test = set([3, 5, 9, 33, 37, 45])
         train = set(range(n)) - val - test
+    elif method == "designed2":
+        val = set([11, 36, 41, 43, 10, 30])
+        test = set([27, 29, 7, 45, 2, 31])
+        train = set(range(n)) - val - test        
     elif method == "random":
         n_val = int(n * 0.2)
         train = set(range(n))
@@ -156,7 +160,7 @@ def parse_args():
         metavar="METHOD",
         default="designed",
         type=str,
-        choices=["designed", "random"],
+        choices=["designed", "random", "designed2"],
         help="the way to split train, validation, and test datesetsz",
     )
     parser.add_argument(
