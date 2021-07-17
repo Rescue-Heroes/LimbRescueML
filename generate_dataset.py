@@ -13,7 +13,7 @@ def get_split_ids(n, method="designed"):
     elif method == "designed2":
         val = set([11, 36, 41, 43, 10, 30])
         test = set([27, 29, 7, 45, 2, 31])
-        train = set(range(n)) - val - test        
+        train = set(range(n)) - val - test
     elif method == "random":
         n_val = int(n * 0.2)
         train = set(range(n))
@@ -40,10 +40,10 @@ def preprocess_single_file(
     )
     del df
 
-    # align left and right from tail
+    # align left and right from head
     length = min(len(left), len(right))
-    left, t_left = left[-length:], t_left[-length:]
-    right, t_right = right[-length:], t_right[-length:]
+    left, t_left = left[:length], t_left[:length]
+    right, t_right = right[:length], t_right[:length]
 
     if preprocess == "normalized":
         left /= max(left)
@@ -71,7 +71,7 @@ def preprocess_single_file(
         metas.append(
             {
                 "file": file.name,
-                "length_from_tail": length,
+                "max_length": length,
                 "post_start": i,
                 "post_end": i + len_sample,
             }
