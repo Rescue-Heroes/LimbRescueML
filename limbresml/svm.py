@@ -38,11 +38,11 @@ if __name__ == "__main__":
 
     data_dir = Path(__file__).resolve().parent.parent
     data_dir = data_dir.joinpath("data")
-    # dataset = "ns10_ls300_normalized.npz"
-    # data = get_data(data_dir.joinpath(dataset))
-    # hp_choices = get_default_hp_choices()
-    # model = tune_hyperparameters(MODEL, data, hp_choices)
+    dataset = "ns10_ls300_normalized.npz"
+    data = get_data(data_dir.joinpath(dataset))
+    hp_choices = get_default_hp_choices()
+    model, hp_params = tune_hyperparameters(MODEL, data, hp_choices)
 
-    hp_params = get_default_hp_params()
+    # hp_params = get_default_hp_params()
     datasets = sorted(list(data_dir.iterdir()))
-    _ = tune_datasets(MODEL, datasets, hp_params)
+    model, dataset = tune_datasets(MODEL, datasets, hp_params)
