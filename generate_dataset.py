@@ -1,11 +1,12 @@
 import itertools
+from collections import Counter, OrderedDict
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-from pathlib import Path
-from typing import OrderedDict
 
 
-def get_split_ids(n, method="designed"):
+def get_split_ids(n, method="designed", labels=None):
     if method == "designed":
         val = set([0, 12, 20, 34, 41, 46])
         test = set([3, 5, 9, 33, 37, 45])
@@ -21,6 +22,21 @@ def get_split_ids(n, method="designed"):
         train -= val
         test = set(np.random.choice(list(train), size=n_val, replace=False))
         train -= test
+    elif method == "random_balanced":
+        if labels is None:
+            raise ValueError("data labels must be provided for random balaced split method")
+        train = set(range(n))
+        count = Counter(labels)
+        n_val_class = int(count.most_common()[-1][-1] * 0.2)
+        val = []
+        test = []
+        for classi in list(count):
+            class_index = [i for i in range(len(labels)) if labels[i] == classi]
+            choice = list(np.random.choice(class_index, size=2 * n_val_class, replace=False))
+            val += choice[:n_val_class]
+            test += choice[n_val_class:]
+        print(test, val)
+
     else:
         raise ValueError(f"method must be one of 'designed' or 'random' (got '{method}')")
     return sorted(list(train)), sorted(list(val)), sorted(list(test))
@@ -104,7 +120,7 @@ def generate_dataset(anno_file, data_dir, save_path=None, *, split="designed", *
     del anno
 
     dataset = OrderedDict()
-    train_ids, val_ids, test_ids = get_split_ids(len(files), method=split)
+    train_ids, val_ids, test_ids = get_split_ids(len(files), method=split, labels=labels)
     for ids, dset in zip([train_ids, val_ids, test_ids], ["train", "val", "test"]):
         _files = [files[i] for i in ids]
         _labels = [labels[i] for i in ids]
@@ -160,7 +176,7 @@ def parse_args():
         metavar="METHOD",
         default="designed",
         type=str,
-        choices=["designed", "random", "designed2"],
+        choices=["designed", "random", "designed2", "random_balanced"],
         help="the way to split train, validation, and test datesetsz",
     )
     parser.add_argument(
