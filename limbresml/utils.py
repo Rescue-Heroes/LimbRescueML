@@ -100,7 +100,7 @@ def tune_datasets(model, datasets, hp_params={}):
 
 def generate_confusion_matrix(model, X, y, labels=None, plot=False, file=None):
     num_classes = len(model.classes_)
-    if labels == None:
+    if labels is None:
         labels = [f"Class{_+1}" for _ in range(num_classes)]
     pred_labels = ["Pred. " + _ for _ in labels]
     true_labels = ["True " + _ for _ in labels]
