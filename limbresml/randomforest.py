@@ -1,6 +1,5 @@
 from typing import OrderedDict
 
-import numpy as np
 from sklearn.ensemble import RandomForestClassifier as MODEL
 
 
@@ -22,7 +21,7 @@ def get_default_hp_choices():
 
 
 def get_default_hp_params():
-    # train / val / test: 1.00 / 0.68 / 0.68
+    # train / val / test: 0.66 / 0.67 / 0.65
     best_hps = OrderedDict(
         {
             "n_estimators": 10,
