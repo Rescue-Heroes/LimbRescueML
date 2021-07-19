@@ -1,12 +1,12 @@
 import copy
 import itertools
 from typing import OrderedDict
-from joblib import dump, load
-import numpy as np
-from tqdm import tqdm
+
 import matplotlib.pyplot as plt
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import plot_confusion_matrix
+import numpy as np
+from joblib import dump, load
+from sklearn.metrics import confusion_matrix, plot_confusion_matrix
+from tqdm import tqdm
 
 
 def get_data(dataset_file):
@@ -64,8 +64,7 @@ def train_model(model, data, hp_params={}, print_acc=True):
 def tune_hyperparameters(model, data, hp_choices):
     hps = list(hp_choices.keys())
     choices = list(itertools.product(*list(hp_choices.values())))
-    print(
-        f"Running {len(choices)} experiments with different combination of hyper-parameters...")
+    print(f"Running {len(choices)} experiments with different combination of hyper-parameters...")
 
     best_val = {"val": -1}
     for c in tqdm(choices):
@@ -77,15 +76,13 @@ def tune_hyperparameters(model, data, hp_choices):
             best_hp_params = hp_params
             best_model = clf
 
-    print(
-        f"Best validation accuracy {best_val['val']:.2f} by {str(best_hp_params)}")
+    print(f"Best validation accuracy {best_val['val']:.2f} by {str(best_hp_params)}")
     print_accuracy(best_val)
     return best_model, best_hp_params
 
 
 def tune_datasets(model, datasets, hp_params={}):
-    print(
-        f"Running {len(datasets)} experiments with different preprocessing on data...")
+    print(f"Running {len(datasets)} experiments with different preprocessing on data...")
     best_val = {"val": -1}
     for dataset in tqdm(datasets):
         data = get_data(dataset)
@@ -96,8 +93,7 @@ def tune_datasets(model, datasets, hp_params={}):
             best_dataset = dataset
             best_model = clf
 
-    print(
-        f"Best validation accuracy {best_val['val']:.2f} by {str(best_dataset)}")
+    print(f"Best validation accuracy {best_val['val']:.2f} by {str(best_dataset)}")
     print_accuracy(best_val)
     return best_model, best_dataset
 
@@ -121,10 +117,9 @@ def generate_confusion_matrix(model, X, y, labels=None, plot=False, file=None):
         normal_options = [None, "true"]
         fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(12, 5))
         for title, normalize, ax in zip(titles_options, normal_options, axes.flatten()):
-            plot_confusion_matrix(model, X, y,
-                                  display_labels=labels, ax=ax,
-                                  cmap=plt.cm.Blues,
-                                  normalize=normalize)
+            plot_confusion_matrix(
+                model, X, y, display_labels=labels, ax=ax, cmap=plt.cm.Blues, normalize=normalize
+            )
             ax.title.set_text(title)
         if file:
             plt.savefig(file)

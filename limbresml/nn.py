@@ -1,5 +1,6 @@
-from sklearn.neural_network import MLPClassifier as MODEL
 from typing import OrderedDict
+
+from sklearn.neural_network import MLPClassifier as MODEL
 
 
 def get_default_hp_choices():
@@ -37,7 +38,8 @@ def get_default_hp_params():
 
 if __name__ == "__main__":
     from pathlib import Path
-    from utils import get_data, tune_hyperparameters, tune_datasets
+
+    from utils import get_data, tune_datasets, tune_hyperparameters
 
     data_dir = Path(__file__).resolve().parent.parent
     data_dir = data_dir.joinpath("data")

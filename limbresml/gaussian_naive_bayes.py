@@ -1,6 +1,7 @@
+from typing import OrderedDict
+
 import numpy as np
 from sklearn.naive_bayes import GaussianNB as MODEL
-from typing import OrderedDict
 
 
 def get_default_hp_choices():
@@ -27,12 +28,7 @@ def get_default_hp_choices():
     # )
 
     # ---GAUSSIAN NAIVE BAYES---
-    hp_choices = OrderedDict(
-        {
-            "priors": [None],
-            "var_smoothing": [1E-8, 1E-10, 1E-11, 1E-9, 1E-12]
-        }
-    )
+    hp_choices = OrderedDict({"priors": [None], "var_smoothing": [1e-8, 1e-10, 1e-11, 1e-9, 1e-12]})
     return hp_choices
 
 
@@ -40,8 +36,8 @@ def get_default_hp_params():
     # train / val / test: 0.39 / 0.58 / 0.33
     best_hps = OrderedDict(
         {
-            'priors': None,
-            'var_smoothing': 1e-08,
+            "priors": None,
+            "var_smoothing": 1e-08,
         }
     )
     return best_hps
@@ -49,7 +45,8 @@ def get_default_hp_params():
 
 if __name__ == "__main__":
     from pathlib import Path
-    from utils import get_data, tune_hyperparameters, tune_datasets
+
+    from utils import get_data, tune_datasets, tune_hyperparameters
 
     data_dir = Path(__file__).resolve().parent.parent
     data_dir = data_dir.joinpath("data")
