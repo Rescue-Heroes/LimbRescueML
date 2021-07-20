@@ -1,9 +1,14 @@
+import argparse
 import itertools
 from collections import Counter, OrderedDict
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
+
+from limbresml.utils import setup_logger
+
+logger = setup_logger("generate_dataset")
 
 
 def get_split_ids(n, method="designed", labels=None):
@@ -18,28 +23,30 @@ def get_split_ids(n, method="designed", labels=None):
     elif method == "random":
         n_val = int(n * 0.2)
         train = set(range(n))
-        val = set(np.random.choice(list(train), size=n_val, replace=False))
-        train -= val
-        test = set(np.random.choice(list(train), size=n_val, replace=False))
-        train -= test
+        idx = list(np.random.choice(list(train), size=2 * n_val, replace=False))
+        val, test = set(idx[:n_val]), set(idx[n_val:])
+        train -= val + test
     elif method == "random_balanced":
         if labels is None:
-            raise ValueError("data labels must be provided for random balaced split method")
-        train = set(range(n))
-        count = Counter(labels)
-        n_val_class = int(count.most_common()[-1][-1] * 0.2)
-        val = []
-        test = []
-        for classi in list(count):
-            class_index = [i for i in range(len(labels)) if labels[i] == classi]
-            choice = list(np.random.choice(class_index, size=2 * n_val_class, replace=False))
-            val += choice[:n_val_class]
-            test += choice[n_val_class:]
-        print(test, val)
+            logger.error("data labels must be provided for random balanced split method (got None)")
+            raise ValueError()
 
+        counter = Counter(labels)
+        n_val = int(counter.most_common()[-1][-1] * 0.2)  # find the least common class as reference
+        val, test = [], []
+        for label in list(counter):
+            idx = [i for i, _label in enumerate(labels) if _label == label]
+            idx = list(np.random.choice(idx, size=2 * n_val, replace=False))
+            val += idx[:n_val]
+            test += idx[n_val:]
+        train = set(range(n)) - set(val) - set(test)
     else:
-        raise ValueError(f"method must be one of 'designed' or 'random' (got '{method}')")
-    return sorted(list(train)), sorted(list(val)), sorted(list(test))
+        logger.error(f"method must be one of 'designed' or 'random' (got '{method}')")
+        raise ValueError()
+
+    train, val, test = sorted(list(train)), sorted(list(val)), sorted(list(test))
+    logger.info(f"number of files in train / val / test: {len(train)} / {len(val)} / {len(test)}")
+    return train, val, test
 
 
 def preprocess_single_file(
@@ -74,9 +81,10 @@ def preprocess_single_file(
             left = np.gradient(left, t_left)
             right = np.gradient(right, t_right)
     else:
-        raise ValueError(
+        logger.error(
             f"method must be one of 'normalized', 'first_order' or 'second_order' (got '{preprocess}')"
         )
+        raise ValueError()
 
     samples = []
     metas = []
@@ -110,14 +118,67 @@ def preprocess_files(files, **kwargs):
     return xs, ms
 
 
-def generate_dataset(anno_file, data_dir, save_path=None, *, split="designed", **kwargs):
+def check_csv_files(files, labels, min_len=300, num_classes=3):
+    logger.info(f"checkcing {len(files)} csv files...")
+    valid_files = []
+    valid_labels = []
+    for f, lbl in zip(files, labels):
+        if np.isnan(lbl):
+            logger.warning(f"No label for '{f.name}' in annotation file. Skip this file. ")
+            continue
+
+        lbl = int(lbl)
+        if lbl == 0:
+            continue
+        if lbl > num_classes or lbl < 0:
+            logger.warning(
+                f"No useful label for '{f.name}' in annotation file (got {lbl} but had {num_classes} classes). \
+                Skip this file. "
+            )
+            continue
+
+        if not f.is_file():
+            logger.warning(f"'{str(f)}' doesn't exist. Skip this file. ")
+            continue
+
+        valid = True  # continue on outer loop
+        df = pd.read_csv(f)
+        for arm in ["LEFT", "RIGHT"]:
+            n_data = sum(df["Limb"] == (arm + "_ARM"))
+            if n_data < min_len:
+                logger.warning(f"{f.name} has {n_data} {arm} but needs {min_len}. Skip this file. ")
+                valid = False
+                break
+        if not valid:
+            continue
+
+        valid_files.append(f)
+        valid_labels.append(lbl)
+
+    if len(valid_files) == 0:
+        logger.error(f"no valid csv files found ")
+        raise AssertionError
+    logger.info(f"found {len(valid_files)} valid csv files out of {len(files)} ")
+    c = Counter(valid_labels)
+    s = " / ".join(["{}"] * len(c))
+    s += ": " + s
+    s = f"number of files in class {s}"
+    logger.info(s.format(*c.keys(), *c.values()))
+
+    return valid_files, valid_labels
+
+
+def generate_dataset(
+    anno_file, data_dir, save_path=None, *, split="designed", n_samples=10, **kwargs
+):
     anno = pd.read_csv(anno_file)
     files = anno["Filename"].tolist()
     labels = anno["Label"].tolist()
-
     data_dir = Path(data_dir)
     files = [data_dir.joinpath(f"{f}.csv") for f in files]
     del anno
+
+    files, labels = check_csv_files(files, labels)
 
     dataset = OrderedDict()
     train_ids, val_ids, test_ids = get_split_ids(len(files), method=split, labels=labels)
@@ -125,9 +186,8 @@ def generate_dataset(anno_file, data_dir, save_path=None, *, split="designed", *
         _files = [files[i] for i in ids]
         _labels = [labels[i] for i in ids]
 
-        xs, ms = preprocess_files(_files, **kwargs)
-        ys = np.array([[lbl] * kwargs["n_samples"] for lbl in _labels]).flatten()
-        # fs = np.array([[f.name] * kwargs["n_samples"] for f in _files]).flatten()
+        xs, ms = preprocess_files(_files, n_samples=n_samples, **kwargs)
+        ys = np.array([[lbl] * n_samples for lbl in _labels]).flatten()
 
         ids = list(range(len(ys)))
         np.random.shuffle(ids)
@@ -137,7 +197,6 @@ def generate_dataset(anno_file, data_dir, save_path=None, *, split="designed", *
         dataset[f"X_{dset}"] = xs
         dataset[f"y_{dset}"] = ys
         dataset[f"meta_{dset}"] = ms
-        # dataset[f"start_end_{dset}"] = ses
 
     if save_path is not None:
         save_path = Path(save_path)
@@ -147,8 +206,6 @@ def generate_dataset(anno_file, data_dir, save_path=None, *, split="designed", *
 
 
 def parse_args():
-    import argparse
-
     parser = argparse.ArgumentParser(description="Preprocess data and prepare dataset. ")
     parser.add_argument(
         "--anno-file",
@@ -169,7 +226,7 @@ def parse_args():
         metavar="PATH",
         default="data/dataset.npz",
         type=Path,
-        help="the path (inclufing file name) to save train, validation, and test datesets in npz",
+        help="the path (including file name) to save train, validation, and test datesets in npz",
     )
     parser.add_argument(
         "--split",
@@ -219,11 +276,11 @@ def parse_args():
 
 
 if __name__ == "__main__":
-
     args = parse_args()
-    print(args)
-
+    logger.info(f"command line arguments: {str(args)}")
+    # print(args)
     np.random.seed(args.seed)
+    logger.info("start generating dataset...")
     dataset = generate_dataset(
         args.anno_file,
         args.data_dir,
@@ -234,9 +291,8 @@ if __name__ == "__main__":
         len_sample=args.len_sample,
         preprocess=args.preprocess,
     )
-
-    print("Done. ")
-    print("Dateset Statistics: ")
+    logger.info(f"dataset saved to '{str(args.save_path)}'")
+    logger.info("dateset statistics: ")
     for dset in ["train", "val", "test"]:
         n_samples = [(dataset[f"y_{dset}"] == lbl).sum() for lbl in range(1, 4)]
-        print("\t{}: {:d} / {:d} / {:d} for label 1 / 2 / 3".format(dset, *n_samples))
+        logger.info("{}: {:d} / {:d} / {:d} for label 1 / 2 / 3".format(dset, *n_samples))
