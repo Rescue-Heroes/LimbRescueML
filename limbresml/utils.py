@@ -1,6 +1,9 @@
 import copy
+import functools
 import itertools
-from typing import OrderedDict
+import logging
+import sys
+from collections import OrderedDict
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -124,3 +127,43 @@ def generate_confusion_matrix(model, X, y, labels=None, plot=False, file=None):
         if file:
             plt.savefig(file)
         plt.show()
+
+
+class _ColorfulFormatter(logging.Formatter):
+    grey = "\x1b[38;1m"
+    red_bg = "\x1b[41;1m"
+    green_bg = "\x1b[46;1m"
+    red = "\x1b[91;1m"
+    green = "\x1b[92;1m"
+    blue = "\x1b[94;1m"
+    cyan = "\x1b[96;1m"
+    reset = "\x1b[0m"
+
+    fmt = "{}[%(asctime)s] %(name)s [%(levelname)s]:{} %(message)s{}"
+
+    FORMATS = {
+        logging.DEBUG: fmt.format(grey, "", reset),
+        logging.INFO: fmt.format(green, reset, ""),
+        logging.WARNING: fmt.format(red, "", reset),
+        logging.ERROR: fmt.format(red_bg, reset, ""),
+        logging.CRITICAL: fmt.format(cyan, reset, ""),
+    }
+
+    def format(self, record):
+        fmt = self.FORMATS.get(record.levelno)
+        formatter = logging.Formatter(fmt, datefmt="%m/%d %H:%M:%S")
+        return formatter.format(record)
+
+
+@functools.lru_cache()  # so that calling setup_logger multiple times won't add many handlers
+def setup_logger(name):
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.DEBUG)
+    logger.propagate = False
+
+    ch = logging.StreamHandler(stream=sys.stdout)
+    ch.setLevel(logging.DEBUG)
+    formatter = _ColorfulFormatter()
+    ch.setFormatter(formatter)
+    logger.addHandler(ch)
+    return logger
