@@ -1,6 +1,17 @@
 from typing import OrderedDict
 
-from sklearn.naive_bayes import GaussianNB as MODEL
+from sklearn.naive_bayes import GaussianNB
+
+
+def get_model_class():
+    return GaussianNB
+
+
+def get_model(cfg_model):
+    return GaussianNB(
+        priors=cfg_model.priors,
+        var_smoothing=cfg_model.var_smoothing,
+    )
 
 
 def get_default_hp_choices():

@@ -1,0 +1,18 @@
+MODEL: "mlp"
+MLP:
+  hidden_layer_sizes: (300,)
+  activation: "logistic" # {"identity", "logistic", "tanh", "relu"}
+  solver: "adam" # {"lbfgs", "sgd", "adam"}
+  learning_rate: "adaptive" # {"constant", "invscaling", "adaptive"}
+  max_iter: 10000000000
+  random_state: 0
+  n_iter_no_change: 1000
+
+  batch_size: "auto"
+
+INPUT:
+  PATH: ".data/ns10_ls300_normalized.npz"
+  COMB_TRAIN_VAL: True
+OUTPUT:
+  DIR: "./output"
+  CONF_MATRIX: True

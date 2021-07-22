@@ -1,0 +1,11 @@
+MODEL: "nb"
+NB:
+  priors: None
+  var_smoothing: 1e-08
+
+INPUT:
+  PATH: ".data/ns10_ls300_normalized.npz"
+  COMB_TRAIN_VAL: True
+OUTPUT:
+  DIR: "./output"
+  CONF_MATRIX: True

@@ -1,6 +1,34 @@
 from typing import OrderedDict
 
-from sklearn.ensemble import RandomForestClassifier as MODEL
+from sklearn.ensemble import RandomForestClassifier
+
+
+def get_model_class():
+    return RandomForestClassifier
+
+
+def get_model(cfg_model):
+    return RandomForestClassifier(
+        n_estimators=cfg_model.n_estimators,
+        criterion=cfg_model.criterion,
+        max_depth=cfg_model.max_depth,
+        min_samples_split=cfg_model.min_samples_split,
+        min_samples_leaf=cfg_model.min_samples_leaf,
+        min_weight_fraction_leaf=cfg_model.min_weight_fraction_leaf,
+        max_features=cfg_model.max_features,
+        max_leaf_nodes=cfg_model.max_leaf_nodes,
+        min_impurity_decrease=cfg_model.min_impurity_decrease,
+        min_impurity_split=cfg_model.min_impurity_split,
+        bootstrap=cfg_model.bootstrap,
+        oob_score=cfg_model.oob_score,
+        n_jobs=cfg_model.n_jobs,
+        random_state=cfg_model.random_state,
+        verbose=cfg_model.verbose,
+        warm_start=cfg_model.warm_start,
+        class_weight=cfg_model.class_weight,
+        ccp_alpha=cfg_model.ccp_alpha,
+        max_samples=cfg_model.max_samples,
+    )
 
 
 def get_default_hp_choices():

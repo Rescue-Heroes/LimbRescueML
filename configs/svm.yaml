@@ -1,0 +1,15 @@
+MODEL: "svm"
+SVM:
+  C: 7.0
+  kernel: "rbf" # {"linear", "poly", "rbf", "sigmoid", "precomputed"}
+  degree: 1
+  gamma: "scale" # {"scale", "auto"} or float
+  class_weight: None
+  decision_function_shape: "ovo" # {"ovo", "ovr"}
+
+INPUT:
+  PATH: ".data/ns10_ls300_normalized.npz"
+  COMB_TRAIN_VAL: True
+OUTPUT:
+  DIR: "./output"
+  CONF_MATRIX: True
