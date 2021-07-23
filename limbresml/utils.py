@@ -64,6 +64,33 @@ def train_model(model, data, hp_params={}, print_acc=True):
     return model, accuracy
 
 
+def train_model(cfg, data, print_acc=True):
+    import importlib
+
+    model = importlib.import_module(f"modeling.{cfg.MODEL}")
+    model
+    X_train, y_train, X_val, y_val, X_test, y_test = (
+        data["X_train"],
+        data["y_train"],
+        data["X_val"],
+        data["y_val"],
+        data["X_test"],
+        data["y_test"],
+    )
+    model = model(**hp_params).fit(X_train, y_train)
+    accuracy = OrderedDict(
+        {
+            "train": model.score(X_train, y_train),
+            "val": model.score(X_val, y_val),
+            "test": model.score(X_test, y_test),
+        }
+    )
+    if print_acc:
+        print_accuracy(accuracy)
+
+    return model, accuracy
+
+
 def tune_hyperparameters(model, data, hp_choices):
     hps = list(hp_choices.keys())
     choices = list(itertools.product(*list(hp_choices.values())))
