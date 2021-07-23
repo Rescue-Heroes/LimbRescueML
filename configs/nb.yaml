@@ -1,4 +1,4 @@
-MODEL: "nb"
+MODEL: "NB"
 NB:
   priors: None
   var_smoothing: 1e-08

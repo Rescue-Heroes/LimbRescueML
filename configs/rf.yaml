@@ -1,4 +1,4 @@
-MODEL: "rf"
+MODEL: "RF"
 RF:
   n_estimators: 10
   criterion: "entropy" # {"gini", "entropy"}

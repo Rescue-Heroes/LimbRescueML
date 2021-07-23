@@ -3,7 +3,7 @@ import itertools
 import logging
 from pathlib import Path
 
-from limbresml.config import get_cfg
+from limbresml.config.config import get_cfg
 from limbresml.utils import (
     generate_confusion_matrix,
     get_data,
@@ -127,7 +127,7 @@ def parse_args():
 if __name__ == "__main__":
     # import importlib
 
-    from limbresml.rf import get_model
+    from limbresml.modeling.svm import get_model
 
     args = parse_args()
     cfg = setup(args)

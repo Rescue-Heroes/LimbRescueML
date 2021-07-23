@@ -1,4 +1,4 @@
-MODEL: "mlp"
+MODEL: "MLP"
 MLP:
   hidden_layer_sizes: (300,)
   activation: "logistic" # {"identity", "logistic", "tanh", "relu"}
