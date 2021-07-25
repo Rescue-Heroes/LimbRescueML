@@ -110,7 +110,7 @@ def default_cfg(model_name):
     # -----------------------------------------------------------------------------
     _C.INPUT = CN()
     _C.INPUT.PATH = "data/ns10_ls300_normalized.npz"
-    _C.INPUT.COMB_TRAIN_VAL = True
+    _C.INPUT.CAT_TRAIN_VAL = True
 
     # -----------------------------------------------------------------------------
     # Output

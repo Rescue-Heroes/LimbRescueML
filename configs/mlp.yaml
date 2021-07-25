@@ -13,6 +13,6 @@ MLP:
 
 INPUT:
   PATH: "./data/ns10_ls300_normalized.npz"
-  COMB_TRAIN_VAL: True
+  CAT_TRAIN_VAL: True
 
 OUTPUT_DIR: "./output"

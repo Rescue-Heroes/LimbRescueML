@@ -8,7 +8,7 @@ from collections import OrderedDict
 import matplotlib.pyplot as plt
 import numpy as np
 from joblib import dump, load
-from sklearn.metrics import confusion_matrix, plot_confusion_matrix
+from sklearn.metrics import confusion_matrix
 from tqdm import tqdm
 
 from limbresml.config.config import CfgNode as CN
@@ -17,8 +17,19 @@ from limbresml.config.config import get_cfg
 logger = logging.getLogger(__name__)
 
 
-def get_data(dataset_file):
+# -----------------------------------------------------------------------------
+# I/O
+# -----------------------------------------------------------------------------
+def get_data(dataset_file, cat_train_val=False):
     d = np.load(dataset_file)
+    if cat_train_val:
+        return {
+            "X_train": np.concatenate((d["X_train"], d["X_val"]), axis=0),
+            "y_train": np.concatenate((d["y_train"], d["y_val"])),
+            "X_test": d["X_test"],
+            "y_test": d["y_test"],
+        }
+
     return {
         "X_train": d["X_train"],
         "y_train": d["y_train"],
@@ -27,7 +38,6 @@ def get_data(dataset_file):
         "X_test": d["X_test"],
         "y_test": d["y_test"],
     }
-    # return d["X_train"], d["y_train"], d["X_val"], d["y_val"], d["X_test"], d["y_test"]
 
 
 def load_model(file):
@@ -39,51 +49,50 @@ def save_model(model, file):
     dump(model, file)
 
 
-def print_accuracy(acc_dict):
-    s = " / ".join(acc_dict.keys()) + " accuracy"
-    s += ": "
-    s += " / ".join(["{:.2f}"] * len(acc_dict))
-    logger.info(s.format(*acc_dict.values()))
-
-
+# -----------------------------------------------------------------------------
+# train and evaluation helper
+# -----------------------------------------------------------------------------
 def train_model(alg_module, cfg, data, print_acc=True):
-    X_train, y_train, X_val, y_val, X_test, y_test = (
-        data["X_train"],
-        data["y_train"],
-        data["X_val"],
-        data["y_val"],
-        data["X_test"],
-        data["y_test"],
-    )
-    cfg_model = cfg[cfg.MODEL]
-    model = alg_module.get_model(cfg_model)
+    X_train, y_train = data["X_train"], data["y_train"]
+    model = alg_module.get_model(cfg[cfg.MODEL])
     model = model.fit(X_train, y_train)
-    accuracy = OrderedDict(
-        {
-            "train": model.score(X_train, y_train),
-            "val": model.score(X_val, y_val),
-            "test": model.score(X_test, y_test),
-        }
-    )
+    accuracy = eval_model(model, data)
 
+    acc_str = log_accuracy(accuracy)
     if print_acc:
-        print_accuracy(accuracy)
+        logger.info(acc_str)
+
     if cfg.OUTPUT_DIR:
         model_path = f"{cfg.OUTPUT_DIR}/{cfg.MODEL}.joblib"
         save_model(model, model_path)
 
+        with open(f"{cfg.OUTPUT_DIR}/accuracy.txt", "w") as f:
+            f.write(acc_str)
+
     return model, accuracy
+
+
+def eval_model(model, data):
+    accuracy = OrderedDict()
+    for set in ["train", "val", "test"]:
+        if "X_" + set in data:
+            X, y = data["X_" + set], data["y_" + set]
+            accuracy[set] = model.score(X, y)
+    return accuracy
 
 
 def tune_hyperparameters(alg_module, cfg, data):
     output_dir = cfg.OUTPUT_DIR
     cfg_model = cfg[cfg.MODEL]
-    cfg_model_dict = {k: [v] for k, v in cfg_model.items()}
+    cfg_model = {k: [v] for k, v in cfg_model.items()}
 
     hp_choices = alg_module.get_default_hp_choices()
-    hp_choices.update(cfg_model_dict)
+    hp_choices.update(cfg_model)
     hps = list(hp_choices.keys())
     choices = list(itertools.product(*list(hp_choices.values())))
+    if len(choices) < 2:
+        logger.error(f"need at least 2 choices to tune hyper-paramaters, got {len(choices)}")
+        raise ValueError
 
     logger.info(
         f"Running {len(choices)} experiments with different combination of hyper-parameters..."
@@ -91,52 +100,61 @@ def tune_hyperparameters(alg_module, cfg, data):
 
     best_val = {"val": -1}
     _cfg = get_cfg(cfg.MODEL)
+    _cfg.OUTPUT_DIR = ""
     for c in tqdm(choices):
         hp_params = dict(zip(hps, c))
         cfg_model = CN(hp_params)
-
         _cfg[cfg.MODEL].merge_from_other_cfg(cfg_model)
-        _cfg.OUTPUT_DIR = ""
 
-        clf, accuracy = train_model(alg_module, _cfg, data, False)
+        model, accuracy = train_model(alg_module, _cfg, data, False)
         if accuracy["val"] > best_val["val"]:
             best_val = copy.deepcopy(accuracy)
-            best_model = clf
+            best_model = model
             best_hp_params = hp_params
             best_cfg = _cfg.clone()
 
-    best_cfg.OUTPUT_DIR = output_dir
     if output_dir:
+        best_cfg.OUTPUT_DIR = output_dir
         model_path = f"{output_dir}/{cfg.MODEL}.joblib"
         save_model(best_model, model_path)
         cfg_path = f"{output_dir}/{cfg.MODEL}_best_hps.yaml"
         with open(cfg_path, "w") as f:
             f.write(best_cfg.dump())
 
+    acc_str = log_accuracy(best_val)
     logger.info(f"Best validation accuracy {best_val['val']:.2f} by \n{str(best_hp_params)}")
-    print_accuracy(best_val)
+    logger.info(acc_str)
 
     return best_model, best_cfg
 
 
-def tune_datasets(model, datasets, hp_params={}):
-    logger.info(f"Running {len(datasets)} experiments with different preprocessing on data...")
+def tune_datasets(alg_module, cfg, datasets):
+    logger.info(f"Running {len(datasets)} experiments with different datasets...")
     best_val = {"val": -1}
     for dataset in tqdm(datasets):
         data = get_data(dataset)
-        clf, accuracy = train_model(model, data, hp_params, False)
+        model, accuracy = train_model(alg_module, cfg, data, False)
 
         if accuracy["val"] > best_val["val"]:
             best_val = copy.deepcopy(accuracy)
             best_dataset = dataset
-            best_model = clf
+            best_model = model
 
+    acc_str = log_accuracy(accuracy)
     logger.info(f"Best validation accuracy {best_val['val']:.2f} by {str(best_dataset)}")
-    print_accuracy(best_val)
+    logger.info(acc_str)
     return best_model, best_dataset
 
 
-def gen_confusion_matrix(model, X, y, labels=None, plot_to=None):
+def log_accuracy(acc_dict):
+    s = " / ".join(acc_dict.keys()) + " accuracy"
+    s += ": "
+    s += " / ".join(["{:.2f}"] * len(acc_dict))
+    s = s.format(*acc_dict.values())
+    return s
+
+
+def plot_confusion_matrix(model, X, y, labels=None, plot_to=None):
     num_classes = len(model.classes_)
     if labels is None:
         labels = [f"Class{_+1}" for _ in range(num_classes)]
@@ -144,25 +162,42 @@ def gen_confusion_matrix(model, X, y, labels=None, plot_to=None):
     true_labels = ["True " + _ for _ in labels]
 
     cm = confusion_matrix(y, model.predict(X))
-    print("Confustion Matrix")
-    s = "{:<15}" * (len(model.classes_) + 1)
-    print(s.format("", *pred_labels))
-    for label, acc in zip(true_labels, cm):
-        print(s.format(label, *acc))
+    cm_norm = cm / cm.sum(axis=1)
+
+    fmt = "{:>15}" * (len(model.classes_) + 1) + "\n"
+    s = fmt.format("", *pred_labels)
+    fmt = "{:>8.0f} ({:.2f})" * len(model.classes_)
+    fmt = "{:>15}" + fmt + "\n"
+    for i, label in enumerate(true_labels):
+        acc = np.vstack((cm[i], cm_norm[i])).T.flatten().tolist()
+        s += fmt.format(label, *acc)
 
     if plot_to is not None:
-        titles_options = [" ", "normalized"]
-        normal_options = [None, "true"]
-        fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(12, 5))
-        for title, normalize, ax in zip(titles_options, normal_options, axes.flatten()):
-            plot_confusion_matrix(
-                model, X, y, display_labels=labels, ax=ax, cmap=plt.cm.Blues, normalize=normalize
-            )
-            ax.title.set_text(title)
+        fig, ax = plt.subplots()
+        im = ax.imshow(cm_norm, cmap=plt.cm.Blues)
+        cmap_min, cmap_max = im.cmap(0), im.cmap(256)
+        thresh = (cm.max() + cm.min()) / 2.0
 
-        plt.savefig(plot_to)
+        ax.set_xticks(np.arange(num_classes))
+        ax.set_yticks(np.arange(num_classes))
+        ax.set_xticklabels(pred_labels)
+        ax.set_yticklabels(true_labels)
+
+        for i, j in itertools.product(range(num_classes), range(num_classes)):
+            color = cmap_max if cm[i, j] < thresh else cmap_min
+            text = "{:.0f} ({:.2f})".format(cm[i, j], cm_norm[i, j])
+            text = ax.text(j, i, text, ha="center", va="center", color=color)
+
+        ax.set_title("Confusion Matrix")
+        fig.colorbar(im, ax=ax)
+        fig.savefig(plot_to, bbox_inches="tight", dpi=200)
+
+    return s
 
 
+# -----------------------------------------------------------------------------
+# Loger
+# -----------------------------------------------------------------------------
 class _ColorfulFormatter(logging.Formatter):
     grey = "\x1b[38;1m"
     red_bg = "\x1b[41;1m"

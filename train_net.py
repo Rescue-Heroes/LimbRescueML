@@ -2,11 +2,13 @@ import argparse
 import logging
 import os
 
+from matplotlib.pyplot import plot
+
 from limbresml.config.config import CfgNode as CN
 from limbresml.config.config import get_cfg
 from limbresml.utils import (
-    gen_confusion_matrix,
     get_data,
+    plot_confusion_matrix,
     setup_logger,
     train_model,
     tune_hyperparameters,
@@ -21,8 +23,10 @@ def setup(args):
     Create configs and perform basic setups.
     """
     cfg = CN(CN.load_yaml(args.config_file))
+    print(cfg)
     if not cfg.TUNE_HP_PARAMS:
         _cfg = get_cfg(cfg.MODEL)
+        print(_cfg)
         _cfg.merge_from_other_cfg(cfg)
         cfg = _cfg
     cfg.freeze()
@@ -66,6 +70,7 @@ if __name__ == "__main__":
 
     args = parse_args()
     cfg = setup(args)
+    logger = logging.getLogger("limbresml.train_net")
 
     dataset = cfg.INPUT.PATH
     data = get_data(dataset)
@@ -89,4 +94,7 @@ if __name__ == "__main__":
         model, accuracy = train_model(alg_module, cfg, data)
 
     plot_to = f"{cfg.OUTPUT_DIR}/confusion_matrix.png"
-    gen_confusion_matrix(model, X_val, y_val, plot_to=plot_to, labels=["normal", "left", "right"])
+    confusion_str = plot_confusion_matrix(
+        model, X_val, y_val, plot_to=plot_to, labels=["normal", "left", "right"]
+    )
+    logger.info(f"confusion matrix: \n{confusion_str}")

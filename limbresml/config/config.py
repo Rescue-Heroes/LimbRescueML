@@ -10,21 +10,8 @@ from yacs.config import CfgNode as _CfgNode
 
 class CfgNode(_CfgNode):
     """
-    Our own extended version of :class:`yacs.config.CfgNode`.
+    Extended version of :class:`yacs.config.CfgNode`.
     It contains the following extra features:
-
-    1. The :meth:`merge_from_file` method supports the "_BASE_" key,
-       which allows the new CfgNode to inherit all the attributes from the
-       base configuration file.
-    2. Keys that start with "COMPUTED_" are treated as insertion-only
-       "computed" attributes. They can be inserted regardless of whether
-       the CfgNode is frozen or not.
-    3. With "allow_unsafe=True", it supports pyyaml tags that evaluate
-       expressions in config. See examples in
-       https://pyyaml.org/wiki/PyYAMLDocumentation#yaml-tags-and-python-types
-       Note that this may lead to arbitrary code execution: you must not
-       load a config file from untrusted sources before manually inspecting
-       the content of the file.
     """
 
     @classmethod
@@ -38,8 +25,7 @@ class CfgNode(_CfgNode):
     @classmethod
     def load_yaml(cls, filename: str, allow_unsafe: bool = False) -> Dict[str, Any]:
         """
-        Just like `yaml.load(open(filename))`, but inherit attributes from its
-            `_BASE_`.
+        Just like `yaml.load(open(filename))`
 
         Args:
             filename (str or file-like object): the file name or file of the current config.
@@ -88,20 +74,6 @@ class CfgNode(_CfgNode):
         loaded_cfg = self.load_yaml(cfg_filename, allow_unsafe=allow_unsafe)
         loaded_cfg = type(self)(loaded_cfg)
         self.merge_from_other_cfg(loaded_cfg)
-
-    def __setattr__(self, name: str, val: Any) -> None:  # pyre-ignore
-        if name.startswith("COMPUTED_"):
-            if name in self:
-                old_val = self[name]
-                if old_val == val:
-                    return
-                raise KeyError(
-                    "Computed attributed '{}' already exists "
-                    "with a different value! old={}, new={}.".format(name, old_val, val)
-                )
-            self[name] = val
-        else:
-            super().__setattr__(name, val)
 
 
 def get_cfg(algorithm) -> CfgNode:
