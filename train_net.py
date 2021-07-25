@@ -22,23 +22,25 @@ def setup(args):
     """
     Create configs and perform basic setups.
     """
+    logger = setup_logger("limbresml")
     cfg = CN(CN.load_yaml(args.config_file))
-    print(cfg)
-    if not cfg.TUNE_HP_PARAMS:
+    if not cfg.get("TUNE_HP_PARAMS", False):
         _cfg = get_cfg(cfg.MODEL)
-        print(_cfg)
         _cfg.merge_from_other_cfg(cfg)
         cfg = _cfg
+    cfg.merge_from_list(args.opts)
     cfg.freeze()
+    logger.info(f"config: \n{str(cfg)}")
 
     output_dir = cfg.OUTPUT_DIR
     if output_dir:
         os.makedirs(output_dir, exist_ok=True)
         cfg_path = f"{output_dir}/config_backup.yaml"
 
+        logger.info(f"backup config file to {cfg_path}")
         with open(cfg_path, "w") as f:
             f.write(cfg.dump())
-    setup_logger("limbresml")
+
     return cfg
 
 
@@ -73,28 +75,26 @@ if __name__ == "__main__":
     logger = logging.getLogger("limbresml.train_net")
 
     dataset = cfg.INPUT.PATH
-    data = get_data(dataset)
-
-    X_train, y_train, X_val, y_val, X_test, y_test = (
-        data["X_train"],
-        data["y_train"],
-        data["X_val"],
-        data["y_val"],
-        data["X_test"],
-        data["y_test"],
-    )
+    data = get_data(dataset, cfg.INPUT.CAT_TRAIN_VAL)
 
     algorithm = cfg.MODEL
-    # cfg_model = cfg[algorithm]
     alg_module = importlib.import_module(f"limbresml.modeling.{algorithm.lower()}")
 
     if cfg.TUNE_HP_PARAMS:
+        logger.info(f"tune hyper-parameters of {cfg.MODEL} model...")
         model, cfg = tune_hyperparameters(alg_module, cfg, data)
     else:
+        logger.info(f"train {cfg.MODEL} model...")
         model, accuracy = train_model(alg_module, cfg, data)
 
-    plot_to = f"{cfg.OUTPUT_DIR}/confusion_matrix.png"
-    confusion_str = plot_confusion_matrix(
-        model, X_val, y_val, plot_to=plot_to, labels=["normal", "left", "right"]
-    )
-    logger.info(f"confusion matrix: \n{confusion_str}")
+    for set in ["val", "test"]:
+        X = data.get("X_" + set, None)
+        if X is None:
+            continue
+
+        y = data["y_" + set]
+        plot_to = f"{cfg.OUTPUT_DIR}/confusion_matrix_{set}.png"
+        confusion_str = plot_confusion_matrix(
+            model, X, y, plot_to=plot_to, labels=["normal", "left", "right"]
+        )
+        logger.info(f"confusion matrix for {set} set: \n{confusion_str}")

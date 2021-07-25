@@ -164,10 +164,10 @@ def plot_confusion_matrix(model, X, y, labels=None, plot_to=None):
     cm = confusion_matrix(y, model.predict(X))
     cm_norm = cm / cm.sum(axis=1)
 
-    fmt = "{:>15}" * (len(model.classes_) + 1) + "\n"
+    fmt = "{:>15}" * (len(model.classes_) + 1)
     s = fmt.format("", *pred_labels)
     fmt = "{:>8.0f} ({:.2f})" * len(model.classes_)
-    fmt = "{:>15}" + fmt + "\n"
+    fmt = "\n{:>15}" + fmt
     for i, label in enumerate(true_labels):
         acc = np.vstack((cm[i], cm_norm[i])).T.flatten().tolist()
         s += fmt.format(label, *acc)
