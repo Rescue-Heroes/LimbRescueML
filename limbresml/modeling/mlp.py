@@ -47,6 +47,7 @@ def get_default_hp_choices():
             "max_iter": [int(1e10)],
             "random_state": [0],
             "n_iter_no_change": [1000],
+            "batch_size": "auto",
         }
     )
     return hp_choices

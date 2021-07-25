@@ -1,8 +1,8 @@
 MODEL: "RF"
-TUNE_HP_PARAMS: False
+TUNE_HP_PARAMS: True
 RF:
   n_estimators: 10
-  criterion: "entropy" # {"gini", "entropy"}
+  # criterion: "entropy" # {"gini", "entropy"}
   max_depth: null
   min_samples_split: 2
   min_samples_leaf: 1

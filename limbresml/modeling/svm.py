@@ -68,7 +68,7 @@ def test():
 if __name__ == "__main__":
     from pathlib import Path
 
-    from utils import (
+    from limbresml.utils import (
         generate_confusion_matrix,
         get_data,
         train_model,
@@ -81,11 +81,13 @@ if __name__ == "__main__":
     # dataset = "ns10_ls300_normalized.npz"
     dataset = "dataset.npz"
     data = get_data(data_dir.joinpath(dataset))
-    hp_choices = get_default_hp_choices()
-    model, hp_params = tune_hyperparameters(MODEL, data, hp_choices)
+    # hp_choices = get_default_hp_choices()
+    # model, hp_params = tune_hyperparameters(MODEL, data, hp_choices)
 
     hp_params = get_default_hp_params()
-    model, _ = train_model(MODEL, data, hp_params, print_acc=True)
-    generate_confusion_matrix(model, data["X_val"], data["y_val"], plot=True)
+    model = get_model_class(hp_params)
+    model, _ = train_model(model, data, hp_params, print_acc=True)
+
+    # generate_confusion_matrix(model, data["X_val"], data["y_val"], plot=True)
     # datasets = sorted(list(data_dir.iterdir()))
     # model, dataset = tune_datasets(MODEL, datasets, hp_params)

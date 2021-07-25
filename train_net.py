@@ -1,45 +1,41 @@
 import argparse
-import itertools
 import logging
-from pathlib import Path
+import os
 
+from limbresml.config.config import CfgNode as CN
 from limbresml.config.config import get_cfg
 from limbresml.utils import (
-    generate_confusion_matrix,
+    gen_confusion_matrix,
     get_data,
     setup_logger,
     train_model,
-    tune_datasets,
     tune_hyperparameters,
 )
+
+logger = logging.getLogger(__name__)
+# from pathlib import Path
 
 
 def setup(args):
     """
     Create configs and perform basic setups.
     """
-    cfg = get_cfg()
-    cfg.merge_from_file(args.config_file)
-    cfg.merge_from_list(args.opts)
+    cfg = CN(CN.load_yaml(args.config_file))
+    if not cfg.TUNE_HP_PARAMS:
+        _cfg = get_cfg(cfg.MODEL)
+        _cfg.merge_from_other_cfg(cfg)
+        cfg = _cfg
     cfg.freeze()
+
+    output_dir = cfg.OUTPUT_DIR
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+        cfg_path = f"{output_dir}/config_backup.yaml"
+
+        with open(cfg_path, "w") as f:
+            f.write(cfg.dump())
     setup_logger("limbresml")
-    # default_setup(cfg, args)
     return cfg
-
-
-# def get_hp(algorithm, tune, customized_hp):
-#     if tune:
-#         hp_choices = algorithm.get_default_hp_choices()
-#         model, hp_params = tune_hyperparameters(algorithm.MODEL, data, hp_choices)
-#         print(hp_params)
-#     hp_params = algorithm.get_default_hp_params()
-#     if customized_hp:
-#         customized_hp = ["".join(_) for _ in customized_hp]
-
-#         customized_hp = iter(customized_hp)
-#         customized_hp_dic = dict([[_, next(customized_hp)] for _ in customized_hp])
-#         print(customized_hp_dic)
-#     return
 
 
 def parse_args():
@@ -48,7 +44,7 @@ def parse_args():
         "--config-file",
         metavar="FILE",
         default="configs/svm.yaml",
-        type=Path,
+        type=str,
         help="the config file",
     )
     parser.add_argument(
@@ -62,77 +58,35 @@ def parse_args():
         default=None,
         nargs=argparse.REMAINDER,
     )
-
-    # parser.add_argument(
-    #     "--dataset-file",
-    #     metavar="PATH",
-    #     default="data/ns10_ls300_normalized.npz",
-    #     type=Path,
-    #     help="the preprocessed data files",
-    # )
-    # parser.add_argument(
-    #     "--output-dir",
-    #     metavar="DIR",
-    #     default="experiment/",
-    #     type=Path,
-    #     help="the directory for outputs",
-    # )
-    # parser.add_argument(
-    #     "--algorithm",
-    #     metavar="ALGORITHM",
-    #     default="svm",
-    #     type=str,
-    #     choices=["svm", "mlp", "random_forest", "gaussian_nb"],
-    #     help="machine learning algorithm, choices including: \
-    #         svm(Support Vector Machine), mlp(Multilayer Perceptron),\
-    #         random_forest(Random Forest) and gaussian_naive_bayes(Gaussian Naive Bayes)",
-    # )
-    # parser.add_argument(
-    #     "--tune",
-    #     metavar="TRUE",
-    #     default=False,
-    #     type=bool,
-    #     help="tune hyerparameters or using default,\
-    #         choices including: True(tune) and False(default)",
-    # )
-    # parser.add_argument(
-    #     "--save-confusion-matrix",
-    #     "-save-cm",
-    #     metavar="TRUE",
-    #     default=False,
-    #     type=bool,
-    #     help="save confusion matrix or not,\
-    #         choices including: True and False(default)",
-    # )
-    # parser.add_argument(
-    #     "--combinedata",
-    #     metavar="TRUE",
-    #     default=False,
-    #     type=bool,
-    #     help="train model with combined train and validation data or train data only,\
-    #         choices including: True and False(default)",
-    # )
-    # parser.add_argument(
-    #     "--hyper-pars",
-    #     metavar="LIST",
-    #     default=None,
-    #     type=list,
-    #     nargs="+",
-    #     help="customized hyperparameters for training model,\
-    #         formatted as key value key value...",
-    # )
     return parser.parse_args()
 
 
 if __name__ == "__main__":
-    # import importlib
-
-    from limbresml.modeling.svm import get_model
+    import importlib
 
     args = parse_args()
     cfg = setup(args)
-    hp = cfg[cfg["MODEL"]]
-    get_model(hp)
-    # data = get_data(args.dataset_file)
-    # algorithm = importlib.import_module(f"limbresml.{args.algorithm}")
-    # hp = get_hp(algorithm, args.tune, args.hyper_pars)
+
+    dataset = cfg.INPUT.PATH
+    data = get_data(dataset)
+
+    X_train, y_train, X_val, y_val, X_test, y_test = (
+        data["X_train"],
+        data["y_train"],
+        data["X_val"],
+        data["y_val"],
+        data["X_test"],
+        data["y_test"],
+    )
+
+    algorithm = cfg.MODEL
+    # cfg_model = cfg[algorithm]
+    alg_module = importlib.import_module(f"limbresml.modeling.{algorithm.lower()}")
+
+    if cfg.TUNE_HP_PARAMS:
+        model, cfg = tune_hyperparameters(alg_module, cfg, data)
+    else:
+        model, accuracy = train_model(alg_module, cfg, data)
+
+    plot_to = f"{cfg.OUTPUT_DIR}/confusion_matrix.png"
+    gen_confusion_matrix(model, X_val, y_val, plot_to=plot_to, labels=["normal", "left", "right"])
