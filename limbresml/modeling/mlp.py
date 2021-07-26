@@ -46,7 +46,7 @@ def get_model(cfg_model):
     )
 
 
-def add_model_cfg(cfg, tune=False):
+def add_cfg_model(cfg, tune=False):
     cfg.MLP = CN()
     cfg.MLP.hidden_layer_sizes = (300,)  # tuple, length = n_layers - 2
     cfg.MLP.activation = "logistic"  # {"identity", "logistic", "tanh", "relu"}

@@ -39,7 +39,7 @@ def get_model(cfg_model):
     )
 
 
-def add_model_cfg(cfg, tune=False):
+def add_cfg_model(cfg, tune=False):
     cfg.SVM = CN()
     cfg.SVM.C = 7.0
     cfg.SVM.kernel = "rbf"  # {"linear", "poly", "rbf", "sigmoid", "precomputed"}
