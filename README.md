@@ -18,23 +18,32 @@ See `python generate_dataset.py --help` for arguments options.
 - Preprocessing options include: "normalized", "first_order", "second_order"
 - Split methods inlcude: "random", "random_balanced"
 
-Example:
+**Example:**
 ```
 python generate_dataset.py --split random_balanced --save-path PATH --n-samples 30 --len-sample 100 --preprocess "normalized"
 ```
 generates splited dataset using normalized rawdata, random balanced split method; 30 samples with wave length of 100 points are generated for each case.
 ### Training and Evaluation 
-Script `train_net.py` is the training script. This script reads given config file for specific algorithm (including data file path, output dir and model hyperparameters, see [svm.yaml](configs/svm.yaml) as an example) to train model.
+Script `train_net.py` is the training script. This script reads given config file for specific algorithm (including data file path, output dir and model hyperparameters, see [svm.yaml](configs/svm.yaml) as an example) to train model. Output including: config file backup, trained model and confusion matrice.
+
+*Detials of config file options in [train configs](configs/README.md)*
+
+Also, this script can tuning hyperparameters to get the best hyperparameters set using tuning configs (see [svm_tune.yaml](configs/svm_tune.yaml) as an example). Output including: config file backup, config file of best hyperparameters, trained model with best hyperparameters and confusion matrice.
 
 See `python train_net.py --help` for arguments options.
 
-Example: (train model using hyperparameters in config file)
+**Example 1: (train model using hyperparameters in config file)**
 ```
 python train_net.py --config-file configs/svm.yaml OUTPUT_DIR "./output_svm_1"
 ```
 train model with hyperparameters and data specified in svm.yaml;
 
-*Argments at the end of command line `OUTPUT_DIR "./output_svm_1"` allow overwrite config options*
+*Argments at the end of command line `OUTPUT_DIR "./output_svm_1"` allow overwrite config options.*
+**Example 2: (tune hyperparameters)**
+```
+python train_net.py --config-file configs/svm_tune.yaml OUTPUT_DIR "./output_svm_2"
+```
+tune hyperparameters to get the best performance model settings.
 
 ### Prediction
 
