@@ -1,12 +1,12 @@
 MODEL: "SVM"
 TUNE_HP_PARAMS: True
 SVM:
-  # C: 7.0
-  # kernel: "rbf" # {"linear", "poly", "rbf", "sigmoid", "precomputed"}
-  # degree: 1
-  # gamma: "scale" # {"scale", "auto"} or float
-  # class_weight: null
-  # decision_function_shape: "ovo" # {"ovo", "ovr"}
+  C: np.linspace(1, 10, num=10).tolist() # np.linspace(1, 10, num=10).tolist()
+  kernel: ["linear", "rbf", "poly", "sigmoid"] # ["linear", "rbf", "poly", "sigmoid"]
+  degree: list(range(1, 6)) # list(range(1, 6))
+  gamma: ["scale", "auto"] # ["scale", "auto"]
+  class_weight: ["balanced", null] # ["balanced", null]
+  decision_function_shape: ["ovo", "ovr"] # ["ovo", "ovr"]
   random_state: null
 
 INPUT:

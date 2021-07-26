@@ -1,13 +1,15 @@
 MODEL: "MLP"
 TUNE_HP_PARAMS: True
 MLP:
-  # hidden_layer_sizes: (300,)
-  # activation: "logistic" # {"identity", "logistic", "tanh", "relu"}
-  # solver: "adam" # {"lbfgs", "sgd", "adam"}
-  # learning_rate: "adaptive" # {"constant", "invscaling", "adaptive"}
-  # max_iter: 10000000000
+  hidden_layer_sizes: [(300, ), (300, 300), (300, 150)] # [(300, ), (300, 300), (300, 150)]
+  activation: ["logistic", "tanh", "relu"] # ["logistic", "tanh", "relu"]
+  solver: ["lbfgs", "sgd", "adam"] # ["lbfgs", "sgd", "adam"]
+  # alpha: [0.1, 0.01, 0.001, 0.0001, 0.00001] # [0.1, 0.01, 0.001, 0.0001, 0.00001]
+  learning_rate: ["adaptive"] # ["constant", "invscaling", "adaptive"]
+  # learning_rate_init: [0.001] # [0.001]
+  max_iter: [int(1e10)] # [int(1e10)]
   random_state: null
-  # n_iter_no_change: 1000
+  n_iter_no_change: [1000] # [1000]
 
   batch_size: "auto"
 
