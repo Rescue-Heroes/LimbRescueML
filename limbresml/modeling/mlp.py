@@ -2,6 +2,17 @@ from typing import OrderedDict
 
 from sklearn.neural_network import MLPClassifier
 
+from ..config import CfgNode as CN
+from ..config import cfg_value_to_list
+
+"""
+# -----------------------------------------------------------------------------
+# Multilayer Perceptron
+# For full documentation, please see:
+# https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html
+# -----------------------------------------------------------------------------
+"""
+
 
 def get_model_class():
     return MLPClassifier
@@ -33,6 +44,36 @@ def get_model(cfg_model):
         n_iter_no_change=cfg_model.n_iter_no_change,
         max_fun=cfg_model.max_fun,
     )
+
+
+def add_model_cfg(cfg, tune=False):
+    cfg.MLP = CN()
+    cfg.MLP.hidden_layer_sizes = (300,)  # tuple, length = n_layers - 2
+    cfg.MLP.activation = "logistic"  # {"identity", "logistic", "tanh", "relu"}
+    cfg.MLP.solver = "adam"  # {"lbfgs", "sgd", "adam"}
+    cfg.MLP.alpha = 0.0001
+    cfg.MLP.batch_size = None  # int, default="auto"
+    cfg.MLP.learning_rate = "adaptive"  # {"constant", "invscaling", "adaptive"}
+    cfg.MLP.learning_rate_init = 0.001
+    cfg.MLP.power_t = 0.5
+    cfg.MLP.max_iter = 10000000000
+    cfg.MLP.shuffle = True
+    cfg.MLP.random_state = None  # int, default=None
+    cfg.MLP.tol = 1e-4
+    cfg.MLP.verbose = False
+    cfg.MLP.warm_start = False
+    cfg.MLP.momentum = 0.9
+    cfg.MLP.nesterovs_momentum = True
+    cfg.MLP.early_stopping = False
+    cfg.MLP.validation_fraction = 0.1
+    cfg.MLP.beta_1 = 0.9
+    cfg.MLP.beta_2 = 0.999
+    cfg.MLP.epsilon = 1e-8
+    cfg.MLP.n_iter_no_change = 1000
+    cfg.MLP.max_fun = 15000
+
+    if tune:
+        cfg_value_to_list(cfg.MLP)
 
 
 def get_default_hp_choices():
