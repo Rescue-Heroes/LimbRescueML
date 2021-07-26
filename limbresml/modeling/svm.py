@@ -3,6 +3,17 @@ from typing import OrderedDict
 import numpy as np
 from sklearn.svm import SVC
 
+from ..config import CfgNode as CN
+from ..config import cfg_value_to_list
+
+"""
+# -----------------------------------------------------------------------------
+# Support Vector Machine
+# For full documentation, please see:
+# https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html
+# -----------------------------------------------------------------------------
+"""
+
 
 def get_model_class():
     return SVC
@@ -26,6 +37,28 @@ def get_model(cfg_model):
         break_ties=cfg_model.break_ties,
         random_state=cfg_model.random_state,
     )
+
+
+def add_model_cfg(cfg, tune=False):
+    cfg.SVM = CN()
+    cfg.SVM.C = 7.0
+    cfg.SVM.kernel = "rbf"  # {"linear", "poly", "rbf", "sigmoid", "precomputed"}
+    cfg.SVM.degree = 1
+    cfg.SVM.gamma = None  # {"scale", "auto"} or float, default="scale"
+    cfg.SVM.coef0 = 0.0
+    cfg.SVM.shrinking = True
+    cfg.SVM.probability = False
+    cfg.SVM.tol = 1e-3
+    cfg.SVM.cache_size = 200.0
+    cfg.SVM.class_weight = None  # dict or "balanced", default=None
+    cfg.SVM.verbose = False
+    cfg.SVM.max_iter = -1
+    cfg.SVM.decision_function_shape = "ovo"  # {"ovo", "ovr"}
+    cfg.SVM.break_ties = False
+    cfg.SVM.random_state = None  # None or int
+
+    if tune:
+        cfg_value_to_list(cfg.SVM)
 
 
 def get_default_hp_choices():

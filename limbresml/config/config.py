@@ -76,14 +76,17 @@ class CfgNode(_CfgNode):
         self.merge_from_other_cfg(loaded_cfg)
 
 
-def get_cfg(algorithm) -> CfgNode:
+def get_cfg() -> CfgNode:
     """
     Get a copy of the default config.
     Returns:
         a detectron2 CfgNode instance.
     """
-    from .defaults import default_cfg
-
-    _C = default_cfg(algorithm)
+    from .defaults import _C
 
     return _C.clone()
+
+
+def cfg_value_to_list(cfg):
+    for k, v in cfg.items():
+        cfg[k] = [v]

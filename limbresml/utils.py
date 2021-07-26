@@ -52,9 +52,9 @@ def save_model(model, file):
 # -----------------------------------------------------------------------------
 # train and evaluation helper
 # -----------------------------------------------------------------------------
-def train_model(alg_module, cfg, data, print_acc=True):
+def train_model(model_module, cfg, data, print_acc=True):
     X_train, y_train = data["X_train"], data["y_train"]
-    model = alg_module.get_model(cfg[cfg.MODEL])
+    model = model_module.get_model(cfg[cfg.MODEL])
     model = model.fit(X_train, y_train)
     accuracy = eval_model(model, data)
 
@@ -81,15 +81,20 @@ def eval_model(model, data):
     return accuracy
 
 
-def tune_hyperparameters(alg_module, cfg, data):
+def tune_hyperparameters(model_module, cfg, data):
+    model_name = cfg.MODEL
+    cfg_model = cfg[model_name].clone()
     output_dir = cfg.OUTPUT_DIR
-    cfg_model = cfg[cfg.MODEL]
-    cfg_model = {k: [v] for k, v in cfg_model.items()}
 
-    hp_choices = alg_module.get_default_hp_choices()
-    hp_choices.update(cfg_model)
-    hps = list(hp_choices.keys())
-    choices = list(itertools.product(*list(hp_choices.values())))
+    cfg.pop(model_name)
+    model_module.add_cfg_model(cfg)
+
+    # cfg_model = {k: [v] for k, v in cfg_model.items()}
+
+    # hp_choices = alg_module.get_default_hp_choices()
+    # hp_choices.update(cfg_model)
+    keys = list(cfg_model.keys())
+    choices = list(itertools.product(*list(cfg_model.values())))
     if len(choices) < 2:
         logger.error(f"need at least 2 choices to tune hyper-paramaters, got {len(choices)}")
         raise ValueError
@@ -99,33 +104,34 @@ def tune_hyperparameters(alg_module, cfg, data):
     )
 
     best_val = {"val": -1}
-    _cfg = get_cfg(cfg.MODEL)
-    _cfg.OUTPUT_DIR = ""
+    # _cfg = get_cfg(model_name)
+    cfg.OUTPUT_DIR = ""  # temperorary turn off to prevent saving
     for c in tqdm(choices):
-        hp_params = dict(zip(hps, c))
-        cfg_model = CN(hp_params)
-        _cfg[cfg.MODEL].merge_from_other_cfg(cfg_model)
+        cfg_model = CN(dict(zip(keys, c)))
+        cfg[model_name].merge_from_other_cfg(cfg_model)
 
-        model, accuracy = train_model(alg_module, _cfg, data, False)
+        model, accuracy = train_model(model_module, cfg, data, False)
         if accuracy["val"] > best_val["val"]:
             best_val = copy.deepcopy(accuracy)
             best_model = model
-            best_hp_params = hp_params
-            best_cfg = _cfg.clone()
+            best_cfg_model = cfg_model
+            # best_cfg = _cfg.clone()
 
     if output_dir:
-        best_cfg.OUTPUT_DIR = output_dir
-        model_path = f"{output_dir}/{cfg.MODEL}.joblib"
+        cfg.OUTPUT_DIR = output_dir
+        cfg[model_name].merge_from_other_cfg(best_cfg_model)
+
+        model_path = f"{output_dir}/{model_name}.joblib"
         save_model(best_model, model_path)
-        cfg_path = f"{output_dir}/{cfg.MODEL}_best_hps.yaml"
+        cfg_path = f"{output_dir}/{model_name}_best_hps.yaml"
         with open(cfg_path, "w") as f:
-            f.write(best_cfg.dump())
+            f.write(cfg.dump())
 
     acc_str = log_accuracy(best_val)
-    logger.info(f"Best validation accuracy {best_val['val']:.2f} by \n{str(best_hp_params)}")
+    logger.info(f"Best validation accuracy {best_val['val']:.2f} by \n{str(best_cfg_model)}")
     logger.info(acc_str)
 
-    return best_model, best_cfg
+    return best_model, accuracy
 
 
 def tune_datasets(alg_module, cfg, datasets):
