@@ -11,12 +11,12 @@ LimbRescueML provides dataset generation("generate_dataset.py"), model training(
 
 ## Getting Started
 ### Data Preprocessing
-Script "generate_dataset.py" preprocesses selected rawdata, and splits preprocessed data into train, validation, test datasets.
-See `python generate_dataset.py --help` for arguments options.
-- Preprocessing options include: "normalized", "first_order", "second_order"
-- Split methods inlcude: "random", "random_balanced"
+Script "generate_dataset.py" preprocesses selected rawdata, and splits preprocessed data into train, validation, test datasets.\
+See `python generate_dataset.py --help` for arguments options.\
+- Preprocessing options include: "normalized", "first_order", "second_order"\
+- Split methods inlcude: "random", "random_balanced"\
 Example:
-`python generate_dataset.py --split random_balanced --save-path PATH --n-samples 30 --len-sample 100 --preprocess "normalized"`
+`python generate_dataset.py --split random_balanced --save-path PATH --n-samples 30 --len-sample 100 --preprocess "normalized"`\
 generates splited dataset using normalized rawdata, random balanced split method; 30 samples with wave length of 100 points are generated for each case.
 
 
