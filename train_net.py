@@ -1,8 +1,7 @@
 import argparse
+import importlib
 import logging
 import os
-
-from matplotlib.pyplot import plot
 
 from limbresml.config.config import CfgNode as CN
 from limbresml.config.config import get_cfg
@@ -15,7 +14,6 @@ from limbresml.utils import (
 )
 
 logger = logging.getLogger(__name__)
-# from pathlib import Path
 
 
 def setup(args):
@@ -23,11 +21,14 @@ def setup(args):
     Create configs and perform basic setups.
     """
     logger = setup_logger("limbresml")
-    cfg = CN(CN.load_yaml(args.config_file))
-    if not cfg.get("TUNE_HP_PARAMS", False):
-        _cfg = get_cfg(cfg.MODEL)
-        _cfg.merge_from_other_cfg(cfg)
-        cfg = _cfg
+    cfg_file = CN(CN.load_yaml(args.config_file))
+    model_name = cfg_file.get("MODEL", "svm")
+    tune_hp_params = cfg_file.get("TUNE_HP_PARAMS", False)
+    model_module = importlib.import_module(f"limbresml.modeling.{model_name.lower()}")
+
+    cfg = get_cfg()
+    model_module.add_cfg_model(cfg, tune_hp_params)
+    cfg.merge_from_other_cfg(cfg_file)
     cfg.merge_from_list(args.opts)
     cfg.freeze()
     logger.info(f"config: \n{str(cfg)}")
@@ -41,7 +42,7 @@ def setup(args):
         with open(cfg_path, "w") as f:
             f.write(cfg.dump())
 
-    return cfg
+    return cfg, model_module
 
 
 def parse_args():
@@ -68,24 +69,23 @@ def parse_args():
 
 
 if __name__ == "__main__":
-    import importlib
 
     args = parse_args()
-    cfg = setup(args)
+    cfg, model_module = setup(args)
     logger = logging.getLogger("limbresml.train_net")
 
     dataset = cfg.INPUT.PATH
     data = get_data(dataset, cfg.INPUT.CAT_TRAIN_VAL)
 
-    algorithm = cfg.MODEL
-    alg_module = importlib.import_module(f"limbresml.modeling.{algorithm.lower()}")
-
     if cfg.TUNE_HP_PARAMS:
         logger.info(f"tune hyper-parameters of {cfg.MODEL} model...")
-        model, cfg = tune_hyperparameters(alg_module, cfg, data)
+        model, accuracy = tune_hyperparameters(
+            model_module, cfg, data
+        )  # cfg will be modified in place by best cfg model
+        print(cfg)
     else:
         logger.info(f"train {cfg.MODEL} model...")
-        model, accuracy = train_model(alg_module, cfg, data)
+        model, accuracy = train_model(model_module, cfg, data)
 
     for set in ["val", "test"]:
         X = data.get("X_" + set, None)

@@ -15,10 +15,6 @@ from ..config import cfg_value_to_list
 """
 
 
-def get_model_class():
-    return SVC
-
-
 def get_model(cfg_model):
     return SVC(
         C=cfg_model.C,
@@ -59,68 +55,3 @@ def add_cfg_model(cfg, tune=False):
 
     if tune:
         cfg_value_to_list(cfg.SVM)
-
-
-def get_default_hp_choices():
-    hp_choices = OrderedDict(
-        {
-            "kernel": ["linear", "rbf", "poly", "sigmoid"],
-            "degree": list(range(1, 6)),
-            "gamma": ["scale", "auto"],
-            "C": np.linspace(1, 10, num=10).tolist(),
-            "decision_function_shape": ["ovo", "ovr"],
-            "class_weight": ["balanced", None],
-        }
-    )
-    return hp_choices
-
-
-def get_default_hp_params():
-    # train / val / test: 0.82 / 0.75 / 0.67
-    best_hps = OrderedDict(
-        {
-            "kernel": "rbf",
-            "degree": 1,
-            "gamma": "scale",
-            "C": 7.0,
-            "decision_function_shape": "ovo",
-            "class_weight": None,
-        }
-    )
-    return best_hps
-
-
-def test():
-    import logging
-
-    logger = logging.getLogger(__name__)
-    logger.info("test")
-    print("test1")
-
-
-if __name__ == "__main__":
-    from pathlib import Path
-
-    from limbresml.utils import (
-        generate_confusion_matrix,
-        get_data,
-        train_model,
-        tune_datasets,
-        tune_hyperparameters,
-    )
-
-    data_dir = Path(__file__).resolve().parent.parent
-    data_dir = data_dir.joinpath("data")
-    # dataset = "ns10_ls300_normalized.npz"
-    dataset = "dataset.npz"
-    data = get_data(data_dir.joinpath(dataset))
-    # hp_choices = get_default_hp_choices()
-    # model, hp_params = tune_hyperparameters(MODEL, data, hp_choices)
-
-    hp_params = get_default_hp_params()
-    model = get_model_class(hp_params)
-    model, _ = train_model(model, data, hp_params, print_acc=True)
-
-    # generate_confusion_matrix(model, data["X_val"], data["y_val"], plot=True)
-    # datasets = sorted(list(data_dir.iterdir()))
-    # model, dataset = tune_datasets(MODEL, datasets, hp_params)

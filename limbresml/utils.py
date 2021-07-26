@@ -90,10 +90,6 @@ def tune_hyperparameters(model_module, cfg, data):
     cfg.pop(model_name)
     model_module.add_cfg_model(cfg)
 
-    # cfg_model = {k: [v] for k, v in cfg_model.items()}
-
-    # hp_choices = alg_module.get_default_hp_choices()
-    # hp_choices.update(cfg_model)
     keys = list(cfg_model.keys())
     choices = list(itertools.product(*list(cfg_model.values())))
     if len(choices) < 2:
@@ -105,7 +101,6 @@ def tune_hyperparameters(model_module, cfg, data):
     )
 
     best_val = {"val": -1}
-    # _cfg = get_cfg(model_name)
     cfg.OUTPUT_DIR = ""  # temperorary turn off to prevent saving
     for c in tqdm(choices):
         cfg_model = CN(dict(zip(keys, c)))
@@ -116,7 +111,6 @@ def tune_hyperparameters(model_module, cfg, data):
             best_val = copy.deepcopy(accuracy)
             best_model = model
             best_cfg_model = cfg_model
-            # best_cfg = _cfg.clone()
 
     if output_dir:
         cfg.OUTPUT_DIR = output_dir
