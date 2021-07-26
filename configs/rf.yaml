@@ -1,12 +1,17 @@
 MODEL: "RF"
 TUNE_HP_PARAMS: False
 RF:
+  # -----------------------------------------------------------------------------
+  # Random Forest
+  # For full documentation, please see:
+  # https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html
+  # -----------------------------------------------------------------------------
   n_estimators: 100
-  criterion: "gini" # {"gini", "entropy"}
+  criterion: "gini"
   max_depth: 20
   min_samples_split: 2
   min_samples_leaf: 1
-  max_features: "auto" # {"auto", "sqrt", "log2"}
+  max_features: "auto"
   n_jobs: -1
   random_state: 0
   ccp_alpha: 0.0

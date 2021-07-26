@@ -1,6 +1,11 @@
 MODEL: "NB"
 TUNE_HP_PARAMS: False
 NB:
+  # -----------------------------------------------------------------------------
+  # Gaussian Naive Bayes
+  # For full documentation, please see:
+  # https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html
+  # -----------------------------------------------------------------------------
   priors: null
   var_smoothing: 1e-08
 

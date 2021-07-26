@@ -1,12 +1,17 @@
 MODEL: "SVM"
 TUNE_HP_PARAMS: False
 SVM:
+  # -----------------------------------------------------------------------------
+  # Support Vector Machine
+  # For full documentation, please see:
+  # https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html
+  # -----------------------------------------------------------------------------
   C: 7.0
-  kernel: "rbf" # {"linear", "poly", "rbf", "sigmoid", "precomputed"}
+  kernel: "rbf"
   degree: 1
-  gamma: "scale" # {"scale", "auto"} or float
+  gamma: "scale"
   class_weight: null
-  decision_function_shape: "ovo" # {"ovo", "ovr"}
+  decision_function_shape: "ovo"
 
 INPUT:
   PATH: "./data/ns10_ls300_normalized.npz"

@@ -1,8 +1,13 @@
 MODEL: "NB"
 TUNE_HP_PARAMS: True
 NB:
-  priors: [null] # [None]
-  var_smoothing: [1e-8, 1e-10, 1e-11, 1e-9, 1e-12] # [1e-8, 1e-10, 1e-11, 1e-9, 1e-12]
+  # -----------------------------------------------------------------------------
+  # Gaussian Naive Bayes
+  # For full documentation, please see:
+  # https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html
+  # -----------------------------------------------------------------------------
+  priors: [null]
+  var_smoothing: [1e-8, 1e-10, 1e-11, 1e-9, 1e-12]
 
 INPUT:
   PATH: "./data/ns10_ls300_normalized.npz"
