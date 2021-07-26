@@ -50,6 +50,15 @@ tune hyperparameters to get the best performance model settings.
 
 ## Model Zoo and Baselines
 
+### Performance table
+SVM 
+|  | Pred. normal | Pred. left | Pred. right |
+| --- | --- | --- | --- | 
+| True normal | 20 | 0 | 0 |
+| True left | 10 | 10 | 0 |
+| True right | 10 | 0 | 10 |
+
+
 ## People
 Sponsors: Carlo Contreras, Lynne Brophy
 Technical Team: 
