@@ -1,5 +1,3 @@
-from typing import OrderedDict
-
 from sklearn.ensemble import RandomForestClassifier
 
 from ..config import CfgNode as CN

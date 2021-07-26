@@ -1,5 +1,3 @@
-from typing import OrderedDict
-
 from sklearn.neural_network import MLPClassifier
 
 from ..config import CfgNode as CN

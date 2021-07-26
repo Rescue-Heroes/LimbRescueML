@@ -1,5 +1,3 @@
-from typing import OrderedDict
-
 from sklearn.naive_bayes import GaussianNB
 
 from ..config import CfgNode as CN

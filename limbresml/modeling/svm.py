@@ -1,6 +1,3 @@
-from typing import OrderedDict
-
-import numpy as np
 from sklearn.svm import SVC
 
 from ..config import CfgNode as CN
