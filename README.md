@@ -54,8 +54,8 @@ tune hyperparameters to get the best performance model settings.
 Sponsors: Carlo Contreras, Lynne Brophy
 Technical Team: 
 - [Tai-Yu Pan](https://github.com/tydpan) implemented dataset generation pipeline, model trainning and evaluation pipeline
-- [Mengdi Fan](https://github.com/mengdifan) implemented model trainning and evaluation pipeline
-- [Rithvich Ramesh](https://github.com/rithvichramesh)
+- [Mengdi Fan](https://github.com/mengdifan) implemented model training and evaluation pipeline
+- [Rithvich Ramesh](https://github.com/rithvichramesh) tested the gaussian naive bayes algorithm
 - [Browy Li](https://github.com/BrowyLi)
 
 
