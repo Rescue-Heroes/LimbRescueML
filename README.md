@@ -1,7 +1,7 @@
 # Project Limb Rescue
 Cancer patients are at risk of lymphedema, a devastating chronic complication. Our overall aim is to develop a product helping patients to monitor the risk of lymphedema. The product marries wearable devices equipped with photoplethysmography (PPG) sensors and our custom software to detect changes in limb characteristics that are concerning for new-onset, or worsening lymphedema. 
 Limb Rescue Cloud, constitute of Data Base, Web Tool, and Machine Learning modules, establish connections between software, doctors, and data scientists.
-<img src="figures/PLR_context_diagram.png" width="400">
+<center><img src="figures/PLR_context_diagram.png" width="400"></center>
 
 ## Project Limb Rescue Machine Learning Module (LimbRescueML)
 LimbRescueML implements four classification algorithms, Support Vector Machine(SVM), Multilayer Perceptron(MLP), Random Forest(RF), and Naive Bayes(NB) to predict lymphedema. Users can compare four classification algorithms, train and evaluate models, and predict based on saved models.
@@ -49,16 +49,19 @@ tune hyperparameters to get the best performance model settings.
 ### Prediction
 
 ## Model Zoo and Baselines
+*NOTE: The following performance table and confusion matrices are generated based on raw data provided by July 19th 2021.*
+
+We performed five tuning hyperparameters runs and picked the hyperparameters set with the highest validation accuracy as default (default yaml configs) for each algrithom.
 
 ### Performance table
 | Accuracy | Train | Test |
 |---|---|---|
 | SVM | 0.82 | 0.67 |
-| MLP |  |  |
+| MLP | 0.924 | 0.58 |
 | RF | 1.00 | 0.67 |
 | NB | 0.62 | 0.58 |
 
-Confusion matrix for test set
+### Confusion matrix for test set
 | SVM | Pred. normal | Pred. left | Pred. right |
 | :--- | ---: | ---: | ---: | 
 | **True normal** | 20.0 (1.00) | 0.0 (0.00) | 0.0 (0.00) |
@@ -67,9 +70,9 @@ Confusion matrix for test set
 
 | MLP | Pred. normal | Pred. left | Pred. right |
 | :--- | ---: | ---: | ---: | 
-| **True normal** | 20 (0.00) | 0 (0.00) | 0 (0.00) |
-| **True left** | 10 (0.00) | 10 (0.00) | 0 (0.00) |
-| **True right** | 10 (0.00) | 0 (0.00) | 10 (0.00) |
+| **True normal** | 11.6 (0.58) | 0.0 (0.00) | 8.4 (0.42) |
+| **True left** | 5.0 (0.25) | 14.0 (0.70) | 1.0 (0.05) |
+| **True right** | 10.0 (0.50) | 0.8 (0.04) | 9.2 (0.46) |
 
 | RF | Pred. normal | Pred. left | Pred. right |
 | :--- | ---: | ---: | ---: |
@@ -85,6 +88,7 @@ Confusion matrix for test set
 
 ## People
 Sponsors: Carlo Contreras, Lynne Brophy
+
 Technical Team: 
 - [Tai-Yu Pan](https://github.com/tydpan) implemented dataset generation pipeline, model trainning and evaluation pipeline
 - [Mengdi Fan](https://github.com/mengdifan) implemented model training and evaluation pipeline
