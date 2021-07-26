@@ -6,13 +6,13 @@ MLP:
   # For full documentation, please see:
   # https://scikit-learn.org/stable/modules/generated/sklearn.neural_network.MLPClassifier.html
   # -----------------------------------------------------------------------------
-  hidden_layer_sizes: [(300, ), (300, 300), (300, 150)]
+  hidden_layer_sizes: [[300], [300, 300], [300, 150]]
   activation: ["logistic", "tanh", "relu"]
   solver: ["lbfgs", "sgd", "adam"]
   # alpha: [0.1, 0.01, 0.001, 0.0001, 0.00001]
   learning_rate: ["adaptive"]
   # learning_rate_init: [0.001]
-  max_iter: [int(1e10)]
+  max_iter: [10000000000]
   random_state: [null]
   n_iter_no_change: [1000]
   batch_size: ["auto"]
