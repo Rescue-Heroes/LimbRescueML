@@ -25,7 +25,7 @@ def get_model(cfg_model):
     )
 
 
-def add_model_cfg(cfg, tune=False):
+def add_cfg_model(cfg, tune=False):
     cfg.NB = CN()
     cfg.NB.priors = None  # array-like of shape(n_classes,)
     cfg.NB.var_smoothing = 1e-08

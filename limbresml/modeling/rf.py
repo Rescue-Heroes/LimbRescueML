@@ -42,7 +42,7 @@ def get_model(cfg_model):
     )
 
 
-def add_model_cfg(cfg, tune=False):
+def add_cfg_model(cfg, tune=False):
     cfg.RF = CN()
     cfg.RF.n_estimators = 10
     cfg.RF.criterion = "entropy"  # {"gini", "entropy"}

@@ -86,6 +86,7 @@ def tune_hyperparameters(model_module, cfg, data):
     cfg_model = cfg[model_name].clone()
     output_dir = cfg.OUTPUT_DIR
 
+    cfg.defrost()
     cfg.pop(model_name)
     model_module.add_cfg_model(cfg)
 
@@ -127,6 +128,7 @@ def tune_hyperparameters(model_module, cfg, data):
         with open(cfg_path, "w") as f:
             f.write(cfg.dump())
 
+    cfg.freeze()
     acc_str = log_accuracy(best_val)
     logger.info(f"Best validation accuracy {best_val['val']:.2f} by \n{str(best_cfg_model)}")
     logger.info(acc_str)

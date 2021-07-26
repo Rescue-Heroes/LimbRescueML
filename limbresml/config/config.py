@@ -88,5 +88,8 @@ def get_cfg() -> CfgNode:
 
 
 def cfg_value_to_list(cfg):
+    is_frozen = cfg.is_frozen()
+    cfg.defrost()
     for k, v in cfg.items():
         cfg[k] = [v]
+    cfg._immutable(is_frozen)
