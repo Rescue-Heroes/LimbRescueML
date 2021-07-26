@@ -45,7 +45,7 @@ def get_default_hp_choices():
             "learning_rate": ["adaptive"],
             # "learning_rate_init": [0.001],
             "max_iter": [int(1e10)],
-            "random_state": [0],
+            # "random_state": [None],
             "n_iter_no_change": [1000],
             "batch_size": "auto",
         }

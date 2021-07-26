@@ -1,18 +1,18 @@
 MODEL: "MLP"
 TUNE_HP_PARAMS: True
 MLP:
-  hidden_layer_sizes: (300,)
-  activation: "logistic" # {"identity", "logistic", "tanh", "relu"}
-  solver: "adam" # {"lbfgs", "sgd", "adam"}
+  # hidden_layer_sizes: (300,)
+  # activation: "logistic" # {"identity", "logistic", "tanh", "relu"}
+  # solver: "adam" # {"lbfgs", "sgd", "adam"}
   # learning_rate: "adaptive" # {"constant", "invscaling", "adaptive"}
   # max_iter: 10000000000
-  # random_state: 0
+  random_state: null
   # n_iter_no_change: 1000
 
   batch_size: "auto"
 
 INPUT:
   PATH: "./data/ns10_ls300_normalized.npz"
-  CAT_TRAIN_VAL: True
+  CAT_TRAIN_VAL: False
 
 OUTPUT_DIR: "./output"

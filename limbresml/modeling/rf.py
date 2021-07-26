@@ -39,7 +39,7 @@ def get_default_hp_choices():
             "max_features": ["auto", "sqrt", "log2"],
             "min_samples_split": [2, 4, 6],
             "min_samples_leaf": [1, 2, 3],
-            "random_state": [0],
+            # "random_state": [0],
             "max_depth": [None, 10, 20, 30],
             "n_jobs": [-1],
             "ccp_alpha": [0.0, 0.2, 0.4, 0.6],

@@ -6,6 +6,6 @@ NB:
 
 INPUT:
   PATH: "./data/ns10_ls300_normalized.npz"
-  CAT_TRAIN_VAL: True
+  CAT_TRAIN_VAL: False
 
 OUTPUT_DIR: "./output"
