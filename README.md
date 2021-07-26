@@ -1,7 +1,7 @@
 # Project Limb Rescue
 Cancer patients are at risk of lymphedema, a devastating chronic complication. Our overall aim is to develop a product helping patients to monitor the risk of lymphedema. The product marries wearable devices equipped with photoplethysmography (PPG) sensors and our custom software to detect changes in limb characteristics that are concerning for new-onset, or worsening lymphedema. 
 Limb Rescue Cloud, constitute of Data Base, Web Tool, and Machine Learning modules, establish connections between software, doctors, and data scientists.
-<img src="figures/PLR_context_diagram.png" width="300">
+<img src="figures/PLR_context_diagram.png" width="500">
 
 ## Project Limb Rescue Machine Learning Module (LimbRescueML)
 LimbRescueML implements four classification algorithms, Support Vector Machine(SVM), Multilayer Perceptron(MLP), Random Forest(RF), and Naive Bayes(NB) to predict lymphedema. Users can compare four classification algorithms, train and evaluate models, and predict based on saved models.
@@ -53,12 +53,33 @@ tune hyperparameters to get the best performance model settings.
 ### Performance table
 #### SVM: 
 train / test accuracy: 0.82 / 0.67
+
 confusion matrix for test set
 | SVM | Pred. normal | Pred. left | Pred. right |
 | --- | --- | --- | --- | 
 | True normal | 20 | 0 | 0 |
 | True left | 10 | 10 | 0 |
 | True right | 10 | 0 | 10 |
+
+#### MLP: 
+train / test accuracy: 0.82 / 0.67
+
+confusion matrix for test set
+| MLP | Pred. normal | Pred. left | Pred. right |
+| --- | --- | --- | --- | 
+| True normal | 20 | 0 | 0 |
+| True left | 10 | 10 | 0 |
+| True right | 10 | 0 | 10 |
+
+#### RF: 
+train / test accuracy: 1.00 / 0.67
+
+confusion matrix for test set
+| RF | Pred. normal | Pred. left | Pred. right |
+| --- | --- | --- | --- | 
+| **True normal** | 18.8 (0.94) | 0 (0.00) | 0 (0.00) |
+| **True left** | 8.4 (0.42) | 11.6 (0.58) | 0 (0.00) |
+| **True right** | 10.4 (0.52) | 0 (0.00) | 9.6 (0.48) |
 
 
 ## People
