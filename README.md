@@ -51,40 +51,32 @@ tune hyperparameters to get the best performance model settings.
 ## Model Zoo and Baselines
 
 ### Performance table
-#### SVM: 
-train / test accuracy: 0.82 / 0.67
+| Accuracy | Train | Test |
+|---|---|---|
+| SVM | 0.82 | 0.67 |
+| MLP |  |  |
+| RF | 1.00 | 0.67 |
+| NB | 0.62 | 0.58 |
 
-confusion matrix for test set
+Confusion matrix for test set
 | SVM | Pred. normal | Pred. left | Pred. right |
 | :--- | ---: | ---: | ---: | 
 | **True normal** | 20.0 (1.00) | 0.0 (0.00) | 0.0 (0.00) |
 | **True left** | 10.0 (0.50) | 10.0 (0.50) | 0.0 (0.00) |
 | **True right** | 10.0 (0.50) | 0.0 (0.00) | 10.0 (0.50) |
 
-#### MLP: (FIXME)
-train / test accuracy: 0.82 / 0.67
-
-confusion matrix for test set
 | MLP | Pred. normal | Pred. left | Pred. right |
 | :--- | ---: | ---: | ---: | 
 | **True normal** | 20 (0.00) | 0 (0.00) | 0 (0.00) |
 | **True left** | 10 (0.00) | 10 (0.00) | 0 (0.00) |
 | **True right** | 10 (0.00) | 0 (0.00) | 10 (0.00) |
 
-#### RF: 
-train / test accuracy: 1.00 / 0.67
-
-confusion matrix for test set
 | RF | Pred. normal | Pred. left | Pred. right |
 | :--- | ---: | ---: | ---: |
 | **True normal** | 18.8 (0.94) | 0.0 (0.00) | 0.0 (0.00) |
 | **True left** | 8.4 (0.42) | 11.6 (0.58) | 0.0 (0.00) |
 | **True right** | 10.4 (0.52) | 0.0 (0.00) | 9.6 (0.48) |
 
-#### NB: 
-train / test accuracy: 0.62 / 0.58
-
-confusion matrix for test set
 | NB | Pred. normal | Pred. left | Pred. right |
 | :--- | ---: | ---: | ---: |
 | **True normal** | 20.0 (1.00) | 0.0 (0.00) | 0.0 (0.00) |
