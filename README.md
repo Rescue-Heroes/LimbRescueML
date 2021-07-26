@@ -9,7 +9,7 @@ LimbRescueML implements four classification algorithms, Support Vector Machine(S
 LimbRescueML provides dataset generation("generate_dataset.py"), model training("train_net.py"), model evaluation(FIXME), wave prediction(FIXME), and package installation(FIXME) pipelines.
 
 ## Installation
-
+FIXME
 ## Getting Started
 ### Data Preprocessing
 Script `generate_dataset.py` preprocesses selected rawdata, and splits preprocessed data into train, validation, test datasets.
@@ -24,11 +24,11 @@ python generate_dataset.py --split random_balanced --save-path PATH --n-samples 
 ```
 generates splited dataset using normalized rawdata, random balanced split method; 30 samples with wave length of 100 points are generated for each case.
 ### Training and Evaluation 
-Script `train_net.py` is the training script. This script reads given config file for specific algorithm (including data file path, output dir and model hyperparameters, see [svm.yaml](configs/svm.yaml) as an example) to train model. Output including: config file backup, trained model and confusion matrice.
+Script `train_net.py` is the training script. This script reads given config file for specific algorithm (including data file path, output dir and model hyperparameters, see [svm.yaml](configs/svm.yaml) as an example) to train model. Outputs include: config file backup, trained model and confusion matrice.
 
-*Detials of config file options in [train configs](configs/README.md)*
+*Detials of config file options in [train configs](configs/README.md).*
 
-Also, this script can tuning hyperparameters to get the best hyperparameters set using tuning configs (see [svm_tune.yaml](configs/svm_tune.yaml) as an example). Output including: config file backup, config file of best hyperparameters, trained model with best hyperparameters and confusion matrice.
+Also, this script can tuning hyperparameters to get the best hyperparameters set using tuning configs (see [svm_tune.yaml](configs/svm_tune.yaml) as an example). Outputs include: config file backup, config file of best hyperparameters, trained model with best hyperparameters and confusion matrice.
 
 See `python train_net.py --help` for arguments options.
 
@@ -39,6 +39,7 @@ python train_net.py --config-file configs/svm.yaml OUTPUT_DIR "./output_svm_1"
 train model with hyperparameters and data specified in svm.yaml;
 
 *Argments at the end of command line `OUTPUT_DIR "./output_svm_1"` allow overwrite config options.*
+
 **Example 2: (tune hyperparameters)**
 ```
 python train_net.py --config-file configs/svm_tune.yaml OUTPUT_DIR "./output_svm_2"
