@@ -22,13 +22,13 @@ See `python generate_dataset.py --help` for arguments options.
 ```
 python generate_dataset.py --data-dir DIR --anno-file PATH --save-path PATH --n-samples 30 --len-sample 100 --preprocess "normalized" --split random_balanced 
 ```
-generates splited dataset using normalized rawdata, random balanced split method; 30 samples with wave length of 100 points are generated for each case.
-### Training and Evaluation 
-Script `train_net.py` is the training script. This script reads given config file for specific algorithm (including data file path, output dir and model hyperparameters, see [svm.yaml](configs/svm.yaml) as an example) to train model. Outputs include: config file backup, trained model and confusion matrice.
+Above command generates splited dataset using normalized rawdata, random balanced split method; 30 samples with wave length of 100 points are generated for each raw data case.
+### Training
+Script `train_net.py` is the training script. This script reads given config file for specific algorithm (including data file path, output dir and model hyperparameters, see [svm.yaml](configs/svm.yaml) as an example) to train model. Outputs include: config file backup(`yaml`), trained model(`joblib`), accuracy(`txt`) and confusion matrice(`png`).
 
 *Detials of config file options in [train configs](configs/README.md).*
 
-Also, this script can tuning hyperparameters to get the best hyperparameters set using tuning configs (see [svm_tune.yaml](configs/svm_tune.yaml) as an example). Outputs include: config file backup, config file of best hyperparameters, trained model with best hyperparameters and confusion matrice.
+Also, this script can tune hyperparameters to get the best hyperparameters set using tuning configs (see [svm_tune.yaml](configs/svm_tune.yaml) as an example). Outputs include: config file backup(`yaml`), config file of best hyperparameters(`yaml`), trained model with best hyperparameters(`joblib`) and confusion matrice(`png`).
 
 See `python train_net.py --help` for arguments options.
 
@@ -36,7 +36,7 @@ See `python train_net.py --help` for arguments options.
 ```
 python train_net.py --config-file configs/svm.yaml OUTPUT_DIR "./output_svm_1"
 ```
-train model with hyperparameters and data specified in svm.yaml;
+Above command: train model with hyperparameters and dataset specified in `svm.yaml`; outputs are saved to `./output_svm_1` instead of the default OUTPUT_DIR in `svm.yaml`.
 
 *Argments at the end of command line `OUTPUT_DIR "./output_svm_1"` allow overwrite config options.*
 
@@ -44,18 +44,20 @@ train model with hyperparameters and data specified in svm.yaml;
 ```
 python train_net.py --config-file configs/svm_tune.yaml OUTPUT_DIR "./output_svm_2"
 ```
-tune hyperparameters to get the best performance model settings.
+Above command: tune hyperparameters to get model settings with the best validation dataset performance, using hyperparameters choices in `svm_tune.yaml`.
 
+### Evaluation
+FIXME
 ### Prediction
-
+FIXME
 ## Model Zoo and Baselines
 *NOTE: The following performance table and confusion matrices are generated based on raw data provided by July 19th 2021.*
 
-We performed five tuning hyperparameters runs and picked the hyperparameters set with the highest validation accuracy as default (default yaml configs) for each algrithom.
+We performed five tuning hyperparameters runs and picked the hyperparameters set with the highest validation accuracy as default (default yaml configs) for each algrithom. Then we trained each algrithom with these default hyperparameters set five times and averaged the accuracy and confusion matrix as following.
 
 ### Performance table
 | Accuracy | Train | Test |
-|---|---|---|
+|:---|---:|---:|
 | SVM | 0.82 | 0.67 |
 | MLP | 0.924 | 0.58 |
 | RF | 1.00 | 0.67 |
