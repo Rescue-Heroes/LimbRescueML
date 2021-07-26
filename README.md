@@ -51,8 +51,9 @@ tune hyperparameters to get the best performance model settings.
 ## Model Zoo and Baselines
 
 ### Performance table
-SVM 
-|  | Pred. normal | Pred. left | Pred. right |
+#### SVM: train / test accuracy: 0.82 / 0.67
+confusion matrix for test set
+| SVM | Pred. normal | Pred. left | Pred. right |
 | --- | --- | --- | --- | 
 | True normal | 20 | 0 | 0 |
 | True left | 10 | 10 | 0 |
