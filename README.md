@@ -20,7 +20,7 @@ See `python generate_dataset.py --help` for arguments options.
 
 **Example:**
 ```
-python generate_dataset.py --split random_balanced --save-path PATH --n-samples 30 --len-sample 100 --preprocess "normalized"
+python generate_dataset.py --data-dir DIR --anno-file PATH --save-path PATH --n-samples 30 --len-sample 100 --preprocess "normalized" --split random_balanced 
 ```
 generates splited dataset using normalized rawdata, random balanced split method; 30 samples with wave length of 100 points are generated for each case.
 ### Training and Evaluation 
