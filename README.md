@@ -34,9 +34,9 @@ See `python train_net.py --help` for arguments options.
 
 **Example 1: (train model using hyperparameters in config file)**
 ```
-python train_net.py --config-file configs/svm.yaml OUTPUT_DIR "./output_svm_1"
+python train_net.py --config-file configs/svm.yaml OUTPUT_DIR "./output_svm_1 SVM.C 6.0"
 ```
-Above command: train model with hyperparameters and dataset specified in `svm.yaml`; outputs are saved to `./output_svm_1` instead of the default `OUTPUT_DIR` in `svm.yaml`.
+Above command: train model with hyperparameters and dataset specified in `svm.yaml`; outputs are saved to `./output_svm_1` instead of the default `OUTPUT_DIR` in `svm.yaml`; hyperparameter `C`in `SVM` algorithm is changed to `6`. 
 
 *Argments at the end of command line `OUTPUT_DIR "./output_svm_1"` allow overwrite config options.*
 
