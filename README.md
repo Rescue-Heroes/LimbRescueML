@@ -1,7 +1,7 @@
 # Project Limb Rescue
 Cancer patients are at risk of lymphedema, a devastating chronic complication. Our overall aim is to develop a product helping patients to monitor the risk of lymphedema. The product marries wearable devices equipped with photoplethysmography (PPG) sensors and our custom software to detect changes in limb characteristics that are concerning for new-onset, or worsening lymphedema. 
 Limb Rescue Cloud, constitute of Data Base, Web Tool, and Machine Learning modules, establish connections between software, doctors, and data scientists.
-<img src="figures/PLR_context_diagram.png" width="500">
+<img src="figures/PLR_context_diagram.png" width="400">
 
 ## Project Limb Rescue Machine Learning Module (LimbRescueML)
 LimbRescueML implements four classification algorithms, Support Vector Machine(SVM), Multilayer Perceptron(MLP), Random Forest(RF), and Naive Bayes(NB) to predict lymphedema. Users can compare four classification algorithms, train and evaluate models, and predict based on saved models.
@@ -56,31 +56,40 @@ train / test accuracy: 0.82 / 0.67
 
 confusion matrix for test set
 | SVM | Pred. normal | Pred. left | Pred. right |
-| --- | --- | --- | --- | 
-| True normal | 20 | 0 | 0 |
-| True left | 10 | 10 | 0 |
-| True right | 10 | 0 | 10 |
+| :--- | ---: | ---: | ---: | 
+| **True normal** | 20.0 (1.00) | 0.0 (0.00) | 0.0 (0.00) |
+| **True left** | 10.0 (0.50) | 10.0 (0.50) | 0.0 (0.00) |
+| **True right** | 10.0 (0.50) | 0.0 (0.00) | 10.0 (0.50) |
 
-#### MLP: 
+#### MLP: (FIXME)
 train / test accuracy: 0.82 / 0.67
 
 confusion matrix for test set
 | MLP | Pred. normal | Pred. left | Pred. right |
-| --- | --- | --- | --- | 
-| True normal | 20 | 0 | 0 |
-| True left | 10 | 10 | 0 |
-| True right | 10 | 0 | 10 |
+| :--- | ---: | ---: | ---: | 
+| **True normal** | 20 (0.00) | 0 (0.00) | 0 (0.00) |
+| **True left** | 10 (0.00) | 10 (0.00) | 0 (0.00) |
+| **True right** | 10 (0.00) | 0 (0.00) | 10 (0.00) |
 
 #### RF: 
 train / test accuracy: 1.00 / 0.67
 
 confusion matrix for test set
 | RF | Pred. normal | Pred. left | Pred. right |
-| --- | --- | --- | --- | 
-| **True normal** | 18.8 (0.94) | 0 (0.00) | 0 (0.00) |
-| **True left** | 8.4 (0.42) | 11.6 (0.58) | 0 (0.00) |
-| **True right** | 10.4 (0.52) | 0 (0.00) | 9.6 (0.48) |
+| :--- | ---: | ---: | ---: |
+| **True normal** | 18.8 (0.94) | 0.0 (0.00) | 0.0 (0.00) |
+| **True left** | 8.4 (0.42) | 11.6 (0.58) | 0.0 (0.00) |
+| **True right** | 10.4 (0.52) | 0.0 (0.00) | 9.6 (0.48) |
 
+#### NB: 
+train / test accuracy: 0.62 / 0.58
+
+confusion matrix for test set
+| NB | Pred. normal | Pred. left | Pred. right |
+| :--- | ---: | ---: | ---: |
+| **True normal** | 20.0 (1.00) | 0.0 (0.00) | 0.0 (0.00) |
+| **True left** | 15.0 (0.75) | 5.0 (0.25) | 0.0 (0.00) |
+| **True right** | 10.0 (0.50) | 0.0 (0.00) | 10.0 (0.50) |
 
 ## People
 Sponsors: Carlo Contreras, Lynne Brophy
