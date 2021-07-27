@@ -12,7 +12,7 @@ where case (both arms normal), case (left arm lymphedema), and case (right arm l
 [Example](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/rawdata/annotations.csv) of Annotation file.
 
 ## Step 2: Data Preprocessing
-Script [generate_dataset.py](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/generate_dataset.py) preprocesses selected raw data with corresponding annotation file([example](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/rawdata/annotations.csv) and [requirements](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/generating_dataset.md#raw-data-preparation)), and splits preprocessed data into train, validation, test datasets. Outputs include: dataset npz file.
+Script [generate_dataset.py](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/generate_dataset.py) preprocesses selected raw data with corresponding annotation file([example](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/rawdata/annotations.csv)), and splits preprocessed data into train, validation, test datasets. Outputs include: dataset npz file.
 
 See `python generate_dataset.py --help` for arguments options. Script details can be found in [docs/generate_dataset.md](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/generate_dataset.md).
 - Preprocessing options include: `"normalized"`, `"first_order"`, `"second_order"`

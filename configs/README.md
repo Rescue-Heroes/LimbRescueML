@@ -10,7 +10,7 @@ Taking [svm.yaml](svm.yaml) as an example:
     - **CAT_TRAIN_VAL**: Boolean type flag, indicates whether to combine train and validation dataset; normally, validation dataset is used in model tuning process; should be `True` for training config.
 - **OUTPUT_DIR**: String type output file path, must be sting type(`"output_dir"`).
 
-_Defaul hyperparameters are provided based on test runs_
+_Defaul hyperparameters are provided based on test runs._
 
 
 ### Tuning hyperparameters configs
