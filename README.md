@@ -6,7 +6,7 @@ Limb Rescue Cloud, constitute of Data Base, Web Tool, and Machine Learning modul
 ## Project Limb Rescue Machine Learning Module (LimbRescueML)
 LimbRescueML implements four classification algorithms, Support Vector Machine(SVM), Multilayer Perceptron(MLP), Random Forest(RF), and Naive Bayes(NB) to predict lymphedema. Users can compare four classification algorithms, train and evaluate models, and predict with saved models.
 
-LimbRescueML provides dataset generation([Generating Dataset](https://github.com/Rescue-Heroes/LimbRescueML#getting-started)), model training([Training](https://github.com/Rescue-Heroes/LimbRescueML#training)), model evaluation([Evaluation](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/evaluation.md)), wave prediction([Prediction](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/prediction.md) for more information.), and package installation(FIXME) pipelines.
+LimbRescueML provides dataset generation([Generating Dataset](https://github.com/Rescue-Heroes/LimbRescueML#getting-started)), model training([Training](https://github.com/Rescue-Heroes/LimbRescueML#training)), model evaluation([Evaluation](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/evaluation.md)), wave prediction([Prediction](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/prediction.md) for more information.), and package installation pipelines.
 
 ## Installation
 - We recommend using [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) to manage packages and dependencies. If it is not installed on your machine, follow the instruction on their website. 
