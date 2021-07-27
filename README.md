@@ -4,12 +4,36 @@ Limb Rescue Cloud, constitute of Data Base, Web Tool, and Machine Learning modul
 <p align="center"><img src="figures/PLR_context_diagram.png" width="400"></p>
 
 ## Project Limb Rescue Machine Learning Module (LimbRescueML)
-LimbRescueML implements four classification algorithms, Support Vector Machine(SVM), Multilayer Perceptron(MLP), Random Forest(RF), and Naive Bayes(NB) to predict lymphedema. Users can compare four classification algorithms, train and evaluate models, and predict based on saved models.
+LimbRescueML implements four classification algorithms, Support Vector Machine(SVM), Multilayer Perceptron(MLP), Random Forest(RF), and Naive Bayes(NB) to predict lymphedema. Users can compare four classification algorithms, train and evaluate models, and predict with saved models.
 
 LimbRescueML provides dataset generation([Generating Dataset](https://github.com/Rescue-Heroes/LimbRescueML#getting-started)), model training([Training](https://github.com/Rescue-Heroes/LimbRescueML#training)), model evaluation([Evaluation](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/evaluation.md)), wave prediction([Prediction](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/prediction.md) for more information.), and package installation(FIXME) pipelines.
 
 ## Installation
-FIXME
+- We recommend using [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) to manage packages and dependencies. If it is not installed on your machine, follow the instruction on their website. 
+- clone our repository:
+```
+git clone git@github.com:Rescue-Heroes/LimbRescueML.git
+cd LimbRescueML
+```
+- create enviornment and install dependencies:
+```
+conda env create --name LimbResCloud --file environment.yaml
+conda activate LimbResCloud
+```
+If you have already had LimbResCloud environment, run the following instead:
+```
+conda env update --name test --file environment.yaml
+conda activate LimbResCloud
+```
+- install our machine learning package:
+```
+python -m pip install -e .
+```
+- check if it's installed correctly. You should find "limbresml" on the package list with the following command:
+```
+conda list
+```
+
 ## Getting Started
 ### Generating Dataset 
 - Step 1: prepare raw data sets and corresponding annotation file. See [Raw Data Preparation](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/generating_dataset.md#raw-data-preparation) for more information.
