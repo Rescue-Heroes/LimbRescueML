@@ -17,10 +17,12 @@ def get_split_ids(n, method="random_balanced", labels=[]):
         return [], [], list(range(n))
 
     if method == "designed":
+        # DEBUG PURPOSE
         val = set([0, 12, 20, 34, 41, 46])
         test = set([3, 5, 9, 33, 37, 45])
         train = set(range(n)) - val - test
     elif method == "designed2":
+        # DEBUG PURPOSE
         val = set([11, 36, 41, 43, 10, 30])
         test = set([27, 29, 7, 45, 2, 31])
         train = set(range(n)) - val - test
@@ -48,7 +50,9 @@ def get_split_ids(n, method="random_balanced", labels=[]):
             test += idx[n_val:]
         train = set(range(n)) - set(val) - set(test)
     else:
-        logger.error(f"method must be one of 'designed' or 'random' (got '{method}')")
+        logger.error(
+            f"method must be one of 'random', 'random_balanced', or 'all_test' (got '{method}')"
+        )
         raise ValueError()
 
     train, val, test = sorted(list(train)), sorted(list(val)), sorted(list(test))
@@ -350,42 +354,45 @@ def demo(file, **kwargs):
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Preprocess data and prepare dataset. ")
+    parser = argparse.ArgumentParser(description="Preprocess data and prepare datasets. ")
     parser.add_argument(
         "--data-dir",
         metavar="DIR",
         default="rawdata/files",
         type=Path,
-        help="the directory of data files",
+        help="directory of data files (default: 'rawdata/files')",
     )
     parser.add_argument(
         "--anno-file",
         metavar="PATH",
         default="",
         type=str,
-        help="the path of annotation file",
+        help="path of annotation file (default: '')",
     )
     parser.add_argument(
         "--save-path",
         metavar="PATH",
         default="data/dataset.npz",
         type=Path,
-        help="the path (including file name) to save train, validation, and test datesets in npz",
+        help="path (including file name) to save datesets in npz (default: 'data/dataset.npz')",
     )
     parser.add_argument(
         "--split",
         metavar="METHOD",
         default="random_balanced",
         type=str,
-        choices=["designed", "random", "designed2", "random_balanced", "all_test"],
-        help="the way to split train, validation, and test datesetsz",
+        choices=["random", "random_balanced", "all_test"],
+        help="the way to split train, validation, and test datesets. \
+            choices: 'random', 'random_balanced' (default, random but makes class balanced), \
+            'all_test' (use all data for test, no train and validation)",
     )
     parser.add_argument(
         "--head-drop",
         metavar="N",
         default=150,
         type=int,
-        help="number of points to drop from head for each data file",
+        help="number of points to drop from head for each data file to \
+            prevent noise at the beginning (default: 150)",
     )
     parser.add_argument(
         "--n-samples-train",
@@ -393,7 +400,8 @@ def parse_args():
         default="10",
         type=str,
         help="for training dataset, use 'center' to generate one center cropped sample or \
-            specify number of samples generated from each date file",
+            specify number of samples randomly generated from each date file after head dropping \
+            (default: 10)",
     )
     parser.add_argument(
         "--n-samples-test",
@@ -401,14 +409,15 @@ def parse_args():
         default="center",
         type=str,
         help="for validation or test dataset, use 'center' to generate one center cropped sample or \
-            specify number of samples generated from each date file",
+            specify number of samples randomly generated from each date file after head dropping \
+            (default: 'center')",
     )
     parser.add_argument(
         "--len-sample",
         metavar="N",
         default=300,
         type=int,
-        help="number of data points for each sample",
+        help="number of data points for each sample (default: 300)",
     )
     parser.add_argument(
         "--preprocess",
@@ -416,35 +425,36 @@ def parse_args():
         default="normalized",
         type=str,
         choices=["normalized", "first_order", "second_order"],
-        help="preprocessing method to use",
+        help="preprocessing method to use. choices: 'normalized' (default), \
+            'first_order', 'second_order'",
     )
     parser.add_argument(
         "--switch-prob-train",
         metavar="FLOAT",
         default=0.5,
         type=float,
-        help="probablity to switch left and right for train. set -1 to turn off",
+        help="probablity to switch left and right for train. set -1 to turn off. (default: 0.5)",
     )
     parser.add_argument(
         "--switch-prob-test",
         metavar="FLOAT",
         default=-1,
         type=float,
-        help="probablity to switch left and right for test. set -1 to turn off",
+        help="probablity to switch left and right for test. set -1 to turn off, (default: -1)",
     )
     parser.add_argument(
         "--demo",
         metavar="PATH",
         default="",
         type=str,
-        help="a csv file to demo",
+        help="a csv file to demo (default: '')",
     )
     parser.add_argument(
         "--seed",
         metavar="N",
         default=0,
         type=int,
-        help="seed for random",
+        help="seed for random to re-produce the same result (default: 0)",
     )
     return parser.parse_args()
 
