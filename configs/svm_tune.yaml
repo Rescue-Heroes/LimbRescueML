@@ -6,9 +6,9 @@ SVM:
   # For full documentation, please see:
   # https://scikit-learn.org/stable/modules/generated/sklearn.svm.SVC.html
   # -----------------------------------------------------------------------------
-  C: [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0]
+  C: [1.0, 3.0, 5.0, 7.0]
   kernel: ["linear", "rbf", "poly", "sigmoid"]
-  degree: [1, 2, 3, 4, 5]
+  degree: [1, 2, 3]
   gamma: ["scale", "auto"]
   class_weight: ["balanced", null]
   decision_function_shape: ["ovo", "ovr"]
