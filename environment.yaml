@@ -1,0 +1,14 @@
+name: LimbRescueML
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.8.10
+  - scikit-learn=0.24.2
+  - tqdm=4.61.2
+  - matplotlib
+  - pandas
+  - pip
+  - pip:
+      - iopath==0.1.8
+      - yacs==0.1.8
