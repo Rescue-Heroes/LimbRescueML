@@ -7,7 +7,7 @@ version = runpy.run_path("limbresml/__init__.py")["__version__"]
 setup(
     name="limbresml",
     version=version,
-    author="Tai-Yu Pan and Mengdi Fan",
+    author="Tai-Yu Pan, Mengdi Fan, Rithvich Ramesh, and Browy Li",
     url="https://github.com/Rescue-Heroes/LimbRescueML",
     description="A machine learning library for Project Limb Rescue",
     python_requires=">=3.8",
