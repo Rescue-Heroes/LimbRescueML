@@ -6,7 +6,7 @@ Limb Rescue Cloud, constitute of Data Base, Web Tool, and Machine Learning modul
 ## Project Limb Rescue Machine Learning Module (LimbRescueML)
 LimbRescueML implements four classification algorithms, Support Vector Machine(SVM), Multilayer Perceptron(MLP), Random Forest(RF), and Naive Bayes(NB) to predict lymphedema. Users can compare four classification algorithms, train and evaluate models, and predict based on saved models.
 
-LimbRescueML provides dataset generation([generate_dataset.py](generate_dataset.py)), model training([train_net.py](train_net.py)), model evaluation(FIXME), wave prediction(FIXME), and package installation(FIXME) pipelines.
+LimbRescueML provides dataset generation([Generating Dataset](https://github.com/Rescue-Heroes/LimbRescueML#getting-started)), model training([Training](https://github.com/Rescue-Heroes/LimbRescueML#training)), model evaluation(FIXME), wave prediction(FIXME), and package installation(FIXME) pipelines.
 
 ## Installation
 FIXME
@@ -16,27 +16,9 @@ FIXME
 - Step 2: generate preprocessed dataset for model training and wave prediction. See [Data Preprocessing](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/generating_dataset.md#data-preprocessing) for more infromation.
 
 ### Training
-Script [train_net.py](train_net.py) is the training script. This script reads the given config file for a specific algorithm (including data file path, output dir and model hyperparameters, see [svm.yaml](configs/svm.yaml) as an example) to train model. Outputs include: config file backup(_yaml_), trained model(_joblib_), accuracy(_txt_) and confusion matrice(_png_).
-
-_Details of config file options in [train configs](configs/README.md)._
-
-Also, this script can tune hyperparameters to get the best hyperparameters set using tuning configs (see [svm_tune.yaml](configs/svm_tune.yaml) as an example). Outputs include: config file backup(_yaml_), config file of best hyperparameters(_yaml_), trained model with best hyperparameters(_joblib_) and confusion matrice(_png_).
-
-See `python train_net.py --help` for arguments options. Script details can be found in [docs/train_net.md](docs/train_net.md).
-
-**Example 1: (train model using hyperparameters in config file)**
-```
-python train_net.py --config-file configs/svm.yaml OUTPUT_DIR "./output_svm_1 SVM.C 6.0"
-```
-Above command: train model with hyperparameters and dataset specified in `configs/svm.yaml`; outputs are saved to `./output_svm_1` instead of the default `OUTPUT_DIR` in `svm.yaml`; hyperparameter `C`in `SVM` algorithm is changed to `6.0`. 
-
-_Arguments at the end of command line `OUTPUT_DIR "./output_svm_1"` allow overwriting config options._
-
-**Example 2: (tune hyperparameters)**
-```
-python train_net.py --config-file configs/svm_tune.yaml OUTPUT_DIR "./output_svm_2"
-```
-Above command: tune hyperparameters to get model settings with the best validation dataset performance, using hyperparameters choices in `configs/svm_tune.yaml`.
+Trainig pipeline provides two functionalities:
+- Training model with specific hyperparameters set. See [Training Model](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/training.md#training-model-with-hyperparameters-specified) for more information.
+- Tuning hyperparameters to find the best model settings. See [Tuning hyperparameters](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/training.md#tuning-hyperparameters-for-best-model-settings) for more information.
 
 ### Evaluation
 FIXME
