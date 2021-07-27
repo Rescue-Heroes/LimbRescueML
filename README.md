@@ -11,10 +11,9 @@ LimbRescueML provides dataset generation([generate_dataset.py](generate_dataset.
 ## Installation
 FIXME
 ## Getting Started
-
 ### Generating Dataset 
-- [Raw Data Preparation]() 
-- Data Preprocessing
+- Step 1: prepare raw data sets and coresponding annotation file. See [Raw Data Preparation](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/generating_dataset.md#raw-data-preparation) for more information.
+- Step 2: generate preprocessed dataset for model training and wave prediction. See [Data Preprocessing](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/generating_dataset.md#data-preprocessing) for more infromation.
 
 ### Training
 Script [train_net.py](train_net.py) is the training script. This script reads the given config file for a specific algorithm (including data file path, output dir and model hyperparameters, see [svm.yaml](configs/svm.yaml) as an example) to train model. Outputs include: config file backup(_yaml_), trained model(_joblib_), accuracy(_txt_) and confusion matrice(_png_).
