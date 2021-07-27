@@ -69,7 +69,6 @@ def parse_args():
 
 
 if __name__ == "__main__":
-
     args = parse_args()
     cfg, model_module = setup(args)
     logger = logging.getLogger("limbresml.train_net")
@@ -77,17 +76,25 @@ if __name__ == "__main__":
     dataset = cfg.INPUT.PATH
     data = get_data(dataset, cfg.INPUT.CAT_TRAIN_VAL)
 
-    if cfg.TUNE_HP_PARAMS:
+    if args.eval_only:
+        from limbresml.utils import eval_model, load_model
+
+        model = load_model(cfg.MODEL)
+        accuracy = eval_model(model, data, print_acc=True, output_dir=cfg.OUTPUT_DIR)
+        if len(accuracy) == 0:
+            exit(0)
+
+    elif cfg.TUNE_HP_PARAMS:
         logger.info(f"tune hyper-parameters of {cfg.MODEL} model...")
         model, accuracy = tune_hyperparameters(
             model_module, cfg, data
         )  # cfg will be modified in place by best cfg model
-        print(cfg)
+
     else:
         logger.info(f"train {cfg.MODEL} model...")
         model, accuracy = train_model(model_module, cfg, data)
 
-    for set in ["val", "test"]:
+    for set in ["train", "val", "test"]:
         X = data.get("X_" + set, None)
         if X is None:
             continue

@@ -4,6 +4,7 @@ import itertools
 import logging
 import sys
 from collections import OrderedDict
+from pathlib import Path
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,7 +13,6 @@ from sklearn.metrics import confusion_matrix
 from tqdm import tqdm
 
 from limbresml.config.config import CfgNode as CN
-from limbresml.config.config import get_cfg
 
 logger = logging.getLogger(__name__)
 
@@ -21,23 +21,14 @@ logger = logging.getLogger(__name__)
 # I/O
 # -----------------------------------------------------------------------------
 def get_data(dataset_file, cat_train_val=False):
-    d = np.load(dataset_file)
+    d = np.load(dataset_file, allow_pickle=True)
+    d = {k: d[k] for k in d.files if (len(d[k]) > 0) and (d[k][0] is not None)}
     if cat_train_val:
-        return {
-            "X_train": np.concatenate((d["X_train"], d["X_val"]), axis=0),
-            "y_train": np.concatenate((d["y_train"], d["y_val"])),
-            "X_test": d["X_test"],
-            "y_test": d["y_test"],
-        }
-
-    return {
-        "X_train": d["X_train"],
-        "y_train": d["y_train"],
-        "X_val": d["X_val"],
-        "y_val": d["y_val"],
-        "X_test": d["X_test"],
-        "y_test": d["y_test"],
-    }
+        d["X_train"] = np.concatenate((d["X_train"], d["X_val"]), axis=0)
+        d["y_train"] = np.concatenate((d["y_train"], d["y_val"]))
+        d["meta_train"] = list(d["meta_train"]) + list(d["meta_val"])
+        [d.pop(k) for k in ["X_val", "y_val", "meta_val"]]
+    return d
 
 
 def load_model(file):
@@ -56,28 +47,52 @@ def train_model(model_module, cfg, data, print_acc=True):
     X_train, y_train = data["X_train"], data["y_train"]
     model = model_module.get_model(cfg[cfg.MODEL])
     model = model.fit(X_train, y_train)
-    accuracy = eval_model(model, data)
+    accuracy = eval_model(model, data, print_acc, cfg.OUTPUT_DIR)
+
+    if cfg.OUTPUT_DIR:
+        model_path = Path(cfg.OUTPUT_DIR).joinpath(f"{cfg.MODEL}.joblib")
+        save_model(model, model_path)
+
+    return model, accuracy
+
+
+def eval_model(model, data, print_acc=True, output_dir=""):
+    accuracy = OrderedDict()
+    for set in ["train", "val", "test"]:
+        X = data.get("X_" + set, None)
+        if X is None:
+            continue
+
+        y = data.get("y_" + set, None)
+        if y is not None:
+            accuracy[set] = model.score(X, y)
+
+        metas = data.get("meta_" + set, None)
+        if metas is not None:
+            predictions = model.predict(X)
+            for m, pred in zip(metas, predictions):
+                m["prediction"] = pred  # inplace modification
 
     acc_str = log_accuracy(accuracy)
     if print_acc:
         logger.info(acc_str)
 
-    if cfg.OUTPUT_DIR:
-        model_path = f"{cfg.OUTPUT_DIR}/{cfg.MODEL}.joblib"
-        save_model(model, model_path)
+    if output_dir:
+        if len(accuracy) > 0:
+            output_path = Path(output_dir).joinpath("accuracy.txt")
+            logger.info(f"save accuracy to {output_path}")
+            with open(output_path, "w") as f:
+                f.write(acc_str)
 
-        with open(f"{cfg.OUTPUT_DIR}/accuracy.txt", "w") as f:
-            f.write(acc_str)
+        metas = list(itertools.chain(*[data[k] for k in data if k.startswith("meta_")]))
+        if len(metas) > 0:
+            import pandas as pd
 
-    return model, accuracy
+            output_path = Path(output_dir).joinpath("predictions.csv")
+            logger.info(f"save predictions to {output_path}")
+            df = pd.DataFrame(metas)
+            df.to_csv(output_path)
 
-
-def eval_model(model, data):
-    accuracy = OrderedDict()
-    for set in ["train", "val", "test"]:
-        if "X_" + set in data:
-            X, y = data["X_" + set], data["y_" + set]
-            accuracy[set] = model.score(X, y)
     return accuracy
 
 
@@ -116,16 +131,16 @@ def tune_hyperparameters(model_module, cfg, data):
         cfg.OUTPUT_DIR = output_dir
         cfg[model_name].merge_from_other_cfg(best_cfg_model)
 
-        model_path = f"{output_dir}/{model_name}.joblib"
+        output_dir = Path(output_dir)
+        model_path = output_dir.joinpath(f"{model_name}.joblib")
         save_model(best_model, model_path)
-        cfg_path = f"{output_dir}/{model_name}_best_hps.yaml"
+        cfg_path = output_dir.joinpath(f"{model_name}_best_hps.yaml")
         with open(cfg_path, "w") as f:
             f.write(cfg.dump())
 
     cfg.freeze()
-    acc_str = log_accuracy(best_val)
     logger.info(f"Best validation accuracy {best_val['val']:.2f} by \n{str(best_cfg_model)}")
-    logger.info(acc_str)
+    eval_model(best_model, data, True, output_dir)
 
     return best_model, accuracy
 
@@ -149,6 +164,9 @@ def tune_datasets(alg_module, cfg, datasets):
 
 
 def log_accuracy(acc_dict):
+    if len(acc_dict) == 0:
+        return "No accuracy to show"
+
     s = " / ".join(acc_dict.keys()) + " accuracy"
     s += ": "
     s += " / ".join(["{:.2f}"] * len(acc_dict))
