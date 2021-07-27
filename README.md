@@ -6,13 +6,13 @@ Limb Rescue Cloud, constitute of Data Base, Web Tool, and Machine Learning modul
 ## Project Limb Rescue Machine Learning Module (LimbRescueML)
 LimbRescueML implements four classification algorithms, Support Vector Machine(SVM), Multilayer Perceptron(MLP), Random Forest(RF), and Naive Bayes(NB) to predict lymphedema. Users can compare four classification algorithms, train and evaluate models, and predict based on saved models.
 
-LimbRescueML provides dataset generation("generate_dataset.py"), model training("train_net.py"), model evaluation(FIXME), wave prediction(FIXME), and package installation(FIXME) pipelines.
+LimbRescueML provides dataset generation([`generate_dataset.py`](generate_dataset.py)), model training([`"train_net.py"`](train_net.py)), model evaluation(FIXME), wave prediction(FIXME), and package installation(FIXME) pipelines.
 
 ## Installation
 FIXME
 ## Getting Started
 ### Data Preprocessing
-Script `generate_dataset.py` preprocesses selected rawdata, and splits preprocessed data into train, validation, test datasets.
+Script [`generate_dataset.py`](generate_dataset.py) preprocesses selected raw data, and splits preprocessed data into train, validation, test datasets.
 
 See `python generate_dataset.py --help` for arguments options.
 - Preprocessing options include: "normalized", "first_order", "second_order"
