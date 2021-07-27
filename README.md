@@ -6,7 +6,7 @@ Limb Rescue Cloud, constitute of Data Base, Web Tool, and Machine Learning modul
 ## Project Limb Rescue Machine Learning Module (LimbRescueML)
 LimbRescueML implements four classification algorithms, Support Vector Machine(SVM), Multilayer Perceptron(MLP), Random Forest(RF), and Naive Bayes(NB) to predict lymphedema. Users can compare four classification algorithms, train and evaluate models, and predict based on saved models.
 
-LimbRescueML provides dataset generation([Generating Dataset](https://github.com/Rescue-Heroes/LimbRescueML#getting-started)), model training([Training](https://github.com/Rescue-Heroes/LimbRescueML#training)), model evaluation(FIXME), wave prediction(FIXME), and package installation(FIXME) pipelines.
+LimbRescueML provides dataset generation([Generating Dataset](https://github.com/Rescue-Heroes/LimbRescueML#getting-started)), model training([Training](https://github.com/Rescue-Heroes/LimbRescueML#training)), model evaluation([Evaluation](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/evaluation.md)), wave prediction([Prediction](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/prediction.md) for more information.), and package installation(FIXME) pipelines.
 
 ## Installation
 FIXME
@@ -17,13 +17,15 @@ FIXME
 
 ### Training
 Training pipeline provides two functionalities:
-- Training model with specific hyperparameters set. See [Training Model](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/training.md#training-model-with-hyperparameters-specified) for more information.
-- Tuning hyperparameters to find the best model settings. See [Tuning hyperparameters](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/training.md#tuning-hyperparameters-for-best-model-settings) for more information.
+- Training model with specific hyperparameters set. Trained model and prediction table will be saved. See [Training Model](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/training.md#training-model-with-hyperparameters-specified) for more information.
+- Tuning hyperparameters to find the best model settings. Best hyperparameters set, trained model and prediction table will be saved. See [Tuning hyperparameters](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/training.md#tuning-hyperparameters-for-best-model-settings) for more information.
 
 ### Evaluation
-FIXME
+Evlauation pipline allows user to evaluate saved trained models with test dataset or datasets from labeled new raw data. See [Evaluation](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/evaluation.md) for more information.
+
 ### Prediction
-FIXME
+Prediction pipline allows user to make predictions for unlabeled new raw data based on trained model. Raw data preprocess should follow [Generating Dataset](https://github.com/Rescue-Heroes/LimbRescueML#getting-started). See [Prediction](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/prediction.md) for more information.
+
 ## Model Zoo and Baselines
 _NOTE: The following performance table and confusion matrices are generated based on raw data provided by July 19th, 2021._
 

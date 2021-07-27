@@ -2,7 +2,7 @@
 Specify the algorithm/model, hyperparameters, input, and output path in the config file; will be used in the training pipeline.
 
 Taking [svm.yaml](svm.yaml) as an example:
-- **MODEL**: String type algorithm name, including _SVM_, _MLP_, _NB_, and _RF_, must be string type (`"SVM"`); should be `"SVM"` for [svm.yaml](svm.yaml).
+- **MODEL**: String type algorithm name, including _SVM_, _MLP_, _NB_, and _RF_, must be string type (`"SVM"`); should be `"SVM"` for [svm.yaml](svm.yaml). Or a string type path of a saved model, using for model evaluation and prediction.
 - **TUNE_HP_PARAMS**: Boolean type flag, indicates whether to tune hyperparameters or not; should be `False` for training config.
 - **SVM**: contains all hyperparameters set by users; each hyperparameter must follow the default type, for example, `C: 7.0` `C` should be a float type value, use `7.0` instead of `7`; `degree: 1` degree should be an int type value, use `1` instead of `1.0`.
 - **INPUT**:
