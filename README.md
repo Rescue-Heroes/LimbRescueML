@@ -12,22 +12,9 @@ LimbRescueML provides dataset generation([generate_dataset.py](generate_dataset.
 FIXME
 ## Getting Started
 
-### Dataset Generation
+### Generating Dataset 
 - Raw Data Preparation 
 - Data Preprocessing
-
-### Data Preprocessing
-Script [generate_dataset.py](generate_dataset.py) preprocesses selected raw data with corresponding annotation file([example](rawdata/annotations.csv) and [requirements](docs/dataset_generation.md)), and splits preprocessed data into train, validation, test datasets. Outputs include: dataset npz file.
-
-See `python generate_dataset.py --help` for arguments options. Script details can be found in [docs/dataset_generation.md](docs/data_preprocess.md).
-- Preprocessing options include: `"normalized"`, `"first_order"`, `"second_order"`
-- Split methods inlcude: `"random"`, `"random_balanced"`
-
-**Example:**
-```
-python generate_dataset.py --data-dir DIR --anno-file PATH --save-path PATH --n-samples 30 --len-sample 100 --preprocess "normalized" --split random_balanced 
-```
-Above command generates a split dataset using normalized raw data, random balanced split method; 30 samples with the wavelength of 100 points are generated for each raw data case.
 
 ### Training
 Script [train_net.py](train_net.py) is the training script. This script reads the given config file for a specific algorithm (including data file path, output dir and model hyperparameters, see [svm.yaml](configs/svm.yaml) as an example) to train model. Outputs include: config file backup(_yaml_), trained model(_joblib_), accuracy(_txt_) and confusion matrice(_png_).
