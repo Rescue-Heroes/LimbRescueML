@@ -6,10 +6,10 @@ Limb Rescue Cloud, constitute of Data Base, Web Tool, and Machine Learning modul
 ## Project Limb Rescue Machine Learning Module (LimbRescueML)
 LimbRescueML implements four classification algorithms, Support Vector Machine(SVM), Multilayer Perceptron(MLP), Random Forest(RF), and Naive Bayes(NB) to predict lymphedema. Users can compare four classification algorithms, train and evaluate models, and predict with saved models.
 
-LimbRescueML provides dataset generation([Generating Dataset](https://github.com/Rescue-Heroes/LimbRescueML#getting-started)), model training([Training](https://github.com/Rescue-Heroes/LimbRescueML#training)), model evaluation([Evaluation](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/evaluation.md)), wave prediction([Prediction](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/prediction.md) for more information.), and package installation pipelines.
+LimbRescueML provides dataset generation([Generating Dataset](https://github.com/Rescue-Heroes/LimbRescueML#getting-started)), model training([Training](https://github.com/Rescue-Heroes/LimbRescueML#training)), model evaluation([Evaluation](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/evaluation.md)), wave prediction([Prediction](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/prediction.md)), and package installation([Installation](https://github.com/Rescue-Heroes/LimbRescueML#installation)) pipelines.
 
 ## Installation
-- We recommend using [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) to manage packages and dependencies. If it is not installed on your machine, follow the instruction on their website. 
+We recommend using [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) to manage packages and dependencies. If it is not installed on your machine, follow the instruction on their website. 
 - clone our repository:
 ```
 git clone git@github.com:Rescue-Heroes/LimbRescueML.git
@@ -20,16 +20,16 @@ cd LimbRescueML
 conda env create --name LimbResCloud --file environment.yaml
 conda activate LimbResCloud
 ```
-If you have already had LimbResCloud in your environment, run the following instead:
-```
-conda env update --name test --file environment.yaml
-conda activate LimbResCloud
-```
+    If you have already had LimbResCloud in your environments, run the following instead:
+    ```
+    conda env update --name test --file environment.yaml
+    conda activate LimbResCloud
+    ```
 - install our machine learning package:
 ```
 python -m pip install -e .
 ```
-- check if it's installed correctly. You should find "limbresml" on the package list with the following command:
+- check if it's installed correctly. You should find `limbresml` on the package list with the following command:
 ```
 conda list
 ```
@@ -49,10 +49,10 @@ Training pipeline provides two functionalities:
 - Tuning hyperparameters to find the best model settings. Best hyperparameters set, trained model and prediction table will be saved. See [Tuning hyperparameters](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/training.md#tuning-hyperparameters-for-best-model-settings) for more information.
 
 ### Evaluation
-Evlauation pipline allows user to evaluate saved trained models with test dataset or datasets from labeled new raw data. See [Evaluation](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/evaluation.md) for more information.
+Evaluation pipeline allows users to evaluate saved trained models with test datasets or datasets from labeled new raw data. See [Evaluation](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/evaluation.md) for more information.
 
 ### Prediction
-Prediction pipline allows user to make predictions for unlabeled new raw data based on trained model. Raw data preprocess should follow [Generating Dataset](https://github.com/Rescue-Heroes/LimbRescueML#getting-started). See [Prediction](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/prediction.md) for more information.
+Prediction pipeline allows users to make predictions for unlabeled new raw data based on trained model. Raw data preprocess should follow [Generating Dataset](https://github.com/Rescue-Heroes/LimbRescueML#getting-started). See [Prediction](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/prediction.md) for more information.
 
 ## Model Zoo and Baselines
 _NOTE: The following performance table and confusion matrices are generated based on raw data provided by July 19th, 2021._
