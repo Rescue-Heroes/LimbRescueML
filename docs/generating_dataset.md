@@ -57,6 +57,7 @@ python generate_dataset.py --demo rawdata/files/session_2021-06-28-17_43_10.csv
 ```
 
 <p align="center"><img src="../figures/preprocessing_demo.png" width="800"></p>
+
 - show a demo for one csv file, force to switch left and right:
 
 ```
@@ -64,7 +65,9 @@ python generate_dataset.py --demo rawdata/files/session_2021-06-28-17_43_10.csv 
 ```
 
 <p align="center"><img src="../figures/preprocessing_demo_switch.png" width="800"></p>
+
 - dataset for test only:
+
 ```
 python generate_dataset.py --data-dir rawdata/files --split all_test --save-path data/ns10_ls300_normalized_all_test.npz
 ```
