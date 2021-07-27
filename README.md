@@ -11,10 +11,15 @@ LimbRescueML provides dataset generation([generate_dataset.py](generate_dataset.
 ## Installation
 FIXME
 ## Getting Started
-### Data Preprocessing
-Script [generate_dataset.py](generate_dataset.py) preprocesses selected raw data with corresponding annotation file([example](rawdata/annotations.csv) and [requirments](docs/data_preprocess.md)), and splits preprocessed data into train, validation, test datasets. Outputs include: dataset npz file.
 
-See `python generate_dataset.py --help` for arguments options. Script details can be found in [docs/data_preprocess.md](docs/data_preprocess.md).
+### Dataset Generation
+- Raw Data Preparation 
+- Data Preprocessing
+
+### Data Preprocessing
+Script [generate_dataset.py](generate_dataset.py) preprocesses selected raw data with corresponding annotation file([example](rawdata/annotations.csv) and [requirements](docs/dataset_generation.md)), and splits preprocessed data into train, validation, test datasets. Outputs include: dataset npz file.
+
+See `python generate_dataset.py --help` for arguments options. Script details can be found in [docs/dataset_generation.md](docs/data_preprocess.md).
 - Preprocessing options include: `"normalized"`, `"first_order"`, `"second_order"`
 - Split methods inlcude: `"random"`, `"random_balanced"`
 
