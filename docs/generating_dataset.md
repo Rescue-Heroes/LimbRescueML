@@ -2,7 +2,7 @@
 ## Step 1: Raw Data Preparation 
 Annotation of raw data should be provided as a _csv_ file following the format below:
 | Filename | Label |
-|:---|---:|---:|---:|---:|
+|:---|---:|
 | session_2021-06-28-17_43_10 | 1 |
 | session_2021-06-28-17_44_26 | 2 |
 | session_2021-06-28-21_51_04 | 3 |
@@ -60,12 +60,16 @@ python generate_dataset.py --data-dir rawdata/files --anno-file rawdata/annotati
 ```
 python generate_dataset.py --demo rawdata/files/session_2021-06-28-17_43_10.csv
 ```
-<p align="center"><img src="../figures/preprocessing_demo.png" width="400"></p>
+
+<p align="center"><img src="../figures/preprocessing_demo.png" width="800"></p>
 - show a demo for one csv file, force to switch left and right:
+
 ```
 python generate_dataset.py --demo rawdata/files/session_2021-06-28-17_43_10.csv --switch-prob-test 1
 ```
-<p align="center"><img src="../figures/preprocessing_demo_switch.png" width="400"></p>
+
+<p align="center"><img src="../figures/preprocessing_demo_switch.png" width="800"></p>
+
 - a dataset for test only:
 ```
 python generate_dataset.py --data-dir rawdata/files --split all_test --save-path data/ns10_ls300_normalized_all_test.npz
