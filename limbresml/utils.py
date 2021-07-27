@@ -12,7 +12,7 @@ from joblib import dump, load
 from sklearn.metrics import confusion_matrix
 from tqdm import tqdm
 
-from limbresml.config.config import CfgNode as CN
+from .config import CfgNode as CN
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +38,101 @@ def load_model(file):
 def save_model(model, file):
     model = {"model": model}
     dump(model, file)
+
+
+def preprocess_single_file(
+    file,
+    label=None,
+    *,
+    head_drop=150,
+    n_samples=10,
+    len_sample=300,
+    preprocess="normalized",
+    switch_prob=-1,
+):
+    import pandas as pd
+
+    df = pd.read_csv(file)
+    left, t_left = (
+        df.Value[df.Limb == "LEFT_ARM"].to_numpy()[head_drop:],
+        df.Time[df.Limb == "LEFT_ARM"].to_numpy()[head_drop:],
+    )
+    right, t_right = (
+        df.Value[df.Limb == "RIGHT_ARM"].to_numpy()[head_drop:],
+        df.Time[df.Limb == "RIGHT_ARM"].to_numpy()[head_drop:],
+    )
+    del df
+
+    # align left and right from head
+    length = min(len(left), len(right))
+    left, t_left = left[:length], t_left[:length]
+    right, t_right = right[:length], t_right[:length]
+
+    if preprocess == "normalized":
+        _max = max(max(left), max(right))
+        left /= _max
+        right /= _max
+
+    elif preprocess == "first_order":
+        left = np.gradient(left, t_left)
+        right = np.gradient(right, t_right)
+
+    elif preprocess == "second_order":
+        for i in range(2):
+            left = np.gradient(left, t_left)
+            right = np.gradient(right, t_right)
+    else:
+        logger.error(
+            f"method must be one of 'normalized', 'first_order' or \
+            'second_order' (got '{preprocess}')"
+        )
+        raise ValueError()
+
+    def switch_label(label):
+        if label == 1 or label is None:
+            return label
+
+        if label == 2:
+            return 3
+
+        if label == 3:
+            return 2
+
+    def append(idx_start, label):
+        switch = np.random.rand() < switch_prob
+        if not switch:
+            samples.append(left[idx_start : idx_start + len_sample])
+            samples.append(right[idx_start : idx_start + len_sample])
+        else:
+            samples.append(right[idx_start : idx_start + len_sample])
+            samples.append(left[idx_start : idx_start + len_sample])
+            label = switch_label(label)
+
+        metas.append(
+            {
+                "file": file.name,
+                "drop": head_drop,
+                "pre_length": length,
+                "post_start": idx_start,
+                "post_length": len_sample,
+                "switch": switch,
+                "label": label,
+            }
+        )
+
+    samples = []
+    metas = []
+    if n_samples == "center":
+        idx_start = length // 2 - len_sample // 2
+        append(idx_start, label)
+        n_samples = 0  # skip the following for loop
+
+    for _ in range(n_samples):
+        idx_start = np.random.randint(len(left) - len_sample)
+        append(idx_start, label)
+
+    samples = np.concatenate(samples, axis=0).reshape(len(samples) // 2, len_sample * 2)
+    return samples, metas
 
 
 # -----------------------------------------------------------------------------

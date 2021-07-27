@@ -96,7 +96,7 @@ We performed five tuning hyperparameters runs and picked the hyperparameters set
 Sponsors: Carlo Contreras, Lynne Brophy
 
 Technical Team: 
-- [Tai-Yu Pan](https://github.com/tydpan) implemented dataset generation pipeline, model training and evaluation pipeline
+- [Tai-Yu Pan](https://github.com/tydpan) package manager, designed all pipelines
 - [Mengdi Fan](https://github.com/mengdifan) implemented model training and evaluation pipeline, generated documentation
 - [Rithvich Ramesh](https://github.com/rithvichramesh) tested the Gaussian Naive Bayes algorithm
 - [Browy Li](https://github.com/BrowyLi) tested the Random Forest algorithm
