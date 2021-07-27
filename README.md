@@ -12,11 +12,11 @@ LimbRescueML provides dataset generation([Generating Dataset](https://github.com
 FIXME
 ## Getting Started
 ### Generating Dataset 
-- Step 1: prepare raw data sets and coresponding annotation file. See [Raw Data Preparation](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/generating_dataset.md#raw-data-preparation) for more information.
-- Step 2: generate preprocessed dataset for model training and wave prediction. See [Data Preprocessing](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/generating_dataset.md#data-preprocessing) for more infromation.
+- Step 1: prepare raw data sets and corresponding annotation file. See [Raw Data Preparation](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/generating_dataset.md#raw-data-preparation) for more information.
+- Step 2: generate preprocessed datasets for model training and wave prediction. See [Data Preprocessing](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/generating_dataset.md#data-preprocessing) for more information.
 
 ### Training
-Trainig pipeline provides two functionalities:
+Training pipeline provides two functionalities:
 - Training model with specific hyperparameters set. See [Training Model](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/training.md#training-model-with-hyperparameters-specified) for more information.
 - Tuning hyperparameters to find the best model settings. See [Tuning hyperparameters](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/training.md#tuning-hyperparameters-for-best-model-settings) for more information.
 

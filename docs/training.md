@@ -4,7 +4,7 @@ Script [train_net.py](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/tr
 
 ## Training model with hyperparameters specified
 
-- Step 1: Modify config file to specify the dataset path, output directory, model hyperparamets and other settings (see [svm.yaml](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/configs/svm.yaml) as an example).
+- Step 1: Modify config file to specify the dataset path, output directory, model hyperparameters and other settings (see [svm.yaml](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/configs/svm.yaml) as an example).
 
     _Details of config file options in [train configs](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/configs/README.md)._
 
@@ -30,7 +30,7 @@ Script [train_net.py](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/tr
 
 ## Tuning hyperparameters for best model settings
 
-- Step 1: Modify config file to specify the dataset path, output directory, model hyperparamets choices and other settings (see [svm_tune.yaml](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/configs/svm_tune.yaml) as an example).
+- Step 1: Modify config file to specify the dataset path, output directory, model hyperparameters choices and other settings (see [svm_tune.yaml](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/configs/svm_tune.yaml) as an example).
 
     _Details of config file options in [train configs](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/configs/README.md)._
 
