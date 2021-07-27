@@ -10,26 +10,26 @@ LimbRescueML provides dataset generation([Generating Dataset](https://github.com
 
 ## Installation
 We recommend using [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html) to manage packages and dependencies. If it is not installed on your machine, follow the instruction on their website. 
-- clone our repository:
+- Clone our repository:
 ```
 git clone git@github.com:Rescue-Heroes/LimbRescueML.git
 cd LimbRescueML
 ```
-- create enviornment and install dependencies:
+- Create enviornment and install dependencies:
 ```
 conda env create --name LimbResCloud --file environment.yaml
 conda activate LimbResCloud
 ```
-    If you have already had LimbResCloud in your environments, run the following instead:
-    ```
-    conda env update --name test --file environment.yaml
-    conda activate LimbResCloud
-    ```
-- install our machine learning package:
+If you have already had LimbResCloud in your environments, run the following instead:
+```
+conda env update --name test --file environment.yaml
+conda activate LimbResCloud
+```
+- Install our machine learning package:
 ```
 python -m pip install -e .
 ```
-- check if it's installed correctly. You should find `limbresml` on the package list with the following command:
+- Check if it's installed correctly. You should find `limbresml` on the package list with the following command:
 ```
 conda list
 ```
