@@ -463,7 +463,7 @@ if __name__ == "__main__":
         demo(
             csv,
             head_drop=args.head_drop,
-            n_samples=args.n_samples,
+            n_samples=args.n_samples_test,
             len_sample=args.len_sample,
             preprocess=args.preprocess,
             switch_prob=args.switch_prob_test,
