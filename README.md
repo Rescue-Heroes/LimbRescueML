@@ -20,18 +20,9 @@ cd LimbRescueML
 conda env create --name LimbResCloud --file environment.yaml
 conda activate LimbResCloud
 ```
-If you have already had LimbResCloud in your environments, run the following instead:
-```
-conda env update --name LimbResCloud --file environment.yaml
-conda activate LimbResCloud
-```
 - Install our machine learning package:
 ```
 python -m pip install -e .
-```
-- Check if it's installed correctly. You should find `limbresml` on the package list with the following command:
-```
-conda list
 ```
 - After installation, remember to activate the enviornment whenever you want to use the package. 
 ```
