@@ -22,7 +22,7 @@ conda activate LimbResCloud
 ```
 If you have already had LimbResCloud in your environments, run the following instead:
 ```
-conda env update --name test --file environment.yaml
+conda env update --name LimbResCloud --file environment.yaml
 conda activate LimbResCloud
 ```
 - Install our machine learning package:

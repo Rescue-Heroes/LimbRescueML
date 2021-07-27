@@ -52,6 +52,7 @@ def preprocess_single_file(
 ):
     import pandas as pd
 
+    file = Path(file)
     df = pd.read_csv(file)
     left, t_left = (
         df.Value[df.Limb == "LEFT_ARM"].to_numpy()[head_drop:],
