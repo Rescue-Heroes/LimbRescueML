@@ -41,11 +41,6 @@ optional arguments:
   --seed N              seed for random to re-produce the same result (default: 0)
 ```
 
-
-[//]: # See `python generate_dataset.py --help` for arguments options. Script details can be found in [docs/generate_dataset.md](https://github.com/[//]: # Rescue-Heroes/LimbRescueML/blob/main/docs/generate_dataset.md).
-[//]: # - Preprocessing options include: `"normalized"`, `"first_order"`, `"second_order"`
-[//]: # - Split methods inlcude: `"random"`, `"random_balanced"`
-
 **Examples:**
 - simply follow the default settings:
 ```
@@ -69,8 +64,7 @@ python generate_dataset.py --demo rawdata/files/session_2021-06-28-17_43_10.csv 
 ```
 
 <p align="center"><img src="../figures/preprocessing_demo_switch.png" width="800"></p>
-
-- a dataset for test only:
+- dataset for test only:
 ```
 python generate_dataset.py --data-dir rawdata/files --split all_test --save-path data/ns10_ls300_normalized_all_test.npz
 ```
