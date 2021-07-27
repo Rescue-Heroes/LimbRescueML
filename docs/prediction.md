@@ -12,10 +12,10 @@ Script [train_net.py](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/tr
 
     See `python train_net.py --help` for arguments options. Script details can be found in [docs/train_net.md](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/train_net.md).
 
-    **Example: **
+    **Example:**
 
     ```
-    python train_net.py --eval-only  --config-file configs/svm.yaml  MODEL demo_saved_model/SVM.joblib INPUT.PATH data/ns20_ls300_normalized.npz
+    python train_net.py --eval-only  --config-file configs/svm.yaml  MODEL demo_saved_model/SVM.joblib INPUT.PATH data/ns10_ls300_normalized_all_test.npz INPUT.CAT_TRAIN_VAL False OUTPUT_DIR output_prediction
     ```
     Above command: make predictions for dataset `data/ns20_ls300_normalized.npz` using saved model `demo_saved_model/SVM.joblib` (samples should have same length, if training using dataset with length of 100, the model can be only used for other dataset with length of 100); outputs are saved to output path in config file.
 
