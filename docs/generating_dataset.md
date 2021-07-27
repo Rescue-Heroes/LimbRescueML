@@ -1,4 +1,4 @@
-# Dataset Generation
+# Generating Dataset 
 ## Raw Data Preparation 
 ## Data Preprocessing
 Script [generate_dataset.py](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/generate_dataset.py) preprocesses selected raw data with corresponding annotation file([example](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/rawdata/annotations.csv) and [requirements](https://github.com/Rescue-Heroes/LimbRescueML/blob/main/docs/dataset_generation.md#raw-data-preparation)), and splits preprocessed data into train, validation, test datasets. Outputs include: dataset npz file.
