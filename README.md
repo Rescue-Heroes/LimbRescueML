@@ -6,15 +6,15 @@ Limb Rescue Cloud, constitute of Data Base, Web Tool, and Machine Learning modul
 ## Project Limb Rescue Machine Learning Module (LimbRescueML)
 LimbRescueML implements four classification algorithms, Support Vector Machine(SVM), Multilayer Perceptron(MLP), Random Forest(RF), and Naive Bayes(NB) to predict lymphedema. Users can compare four classification algorithms, train and evaluate models, and predict based on saved models.
 
-LimbRescueML provides dataset generation([`generate_dataset.py`](generate_dataset.py)), model training([`"train_net.py"`](train_net.py)), model evaluation(FIXME), wave prediction(FIXME), and package installation(FIXME) pipelines.
+LimbRescueML provides dataset generation([generate_dataset.py](generate_dataset.py)), model training([train_net.py](train_net.py)), model evaluation(FIXME), wave prediction(FIXME), and package installation(FIXME) pipelines.
 
 ## Installation
 FIXME
 ## Getting Started
 ### Data Preprocessing
-Script [`generate_dataset.py`](generate_dataset.py) preprocesses selected raw data, and splits preprocessed data into train, validation, test datasets. Outputs include: dataset npz file.
+Script [generate_dataset.py](generate_dataset.py) preprocesses selected raw data, and splits preprocessed data into train, validation, test datasets. Outputs include: dataset npz file.
 
-See `python generate_dataset.py --help` for arguments options. Script details can be found in [`docs/generate_dataset.md`](docs/generate_dataset.md).
+See `python generate_dataset.py --help` for arguments options. Script details can be found in [docs/generate_dataset.md](docs/generate_dataset.md).
 - Preprocessing options include: `"normalized"`, `"first_order"`, `"second_order"`
 - Split methods inlcude: `"random"`, `"random_balanced"`
 
@@ -25,34 +25,34 @@ python generate_dataset.py --data-dir DIR --anno-file PATH --save-path PATH --n-
 Above command generates a split dataset using normalized raw data, random balanced split method; 30 samples with the wavelength of 100 points are generated for each raw data case.
 
 ### Training
-Script [`train_net.py`](train_net.py) is the training script. This script reads the given config file for a specific algorithm (including data file path, output dir and model hyperparameters, see [svm.yaml](configs/svm.yaml) as an example) to train model. Outputs include: config file backup(`yaml`), trained model(`joblib`), accuracy(`txt`) and confusion matrice(`png`).
+Script [train_net.py](train_net.py) is the training script. This script reads the given config file for a specific algorithm (including data file path, output dir and model hyperparameters, see [svm.yaml](configs/svm.yaml) as an example) to train model. Outputs include: config file backup(_yaml_), trained model(_joblib_), accuracy(_txt_) and confusion matrice(_png_).
 
-*Details of config file options in [train configs](configs/README.md).*
+_Details of config file options in [train configs](configs/README.md)._
 
-Also, this script can tune hyperparameters to get the best hyperparameters set using tuning configs (see [`svm_tune.yaml`](configs/svm_tune.yaml) as an example). Outputs include: config file backup(`yaml`), config file of best hyperparameters(`yaml`), trained model with best hyperparameters(`joblib`) and confusion matrice(`png`).
+Also, this script can tune hyperparameters to get the best hyperparameters set using tuning configs (see [svm_tune.yaml](configs/svm_tune.yaml) as an example). Outputs include: config file backup(_yaml_), config file of best hyperparameters(_yaml_), trained model with best hyperparameters(_joblib_) and confusion matrice(_png_).
 
-See `python train_net.py --help` for arguments options. Script details can be found in [`docs/train_net.md`](docs/train_net.md).
+See `python train_net.py --help` for arguments options. Script details can be found in [docs/train_net.md](docs/train_net.md).
 
 **Example 1: (train model using hyperparameters in config file)**
 ```
 python train_net.py --config-file configs/svm.yaml OUTPUT_DIR "./output_svm_1 SVM.C 6.0"
 ```
-Above command: train model with hyperparameters and dataset specified in `svm.yaml`; outputs are saved to `./output_svm_1` instead of the default `OUTPUT_DIR` in `svm.yaml`; hyperparameter `C`in `SVM` algorithm is changed to `6`. 
+Above command: train model with hyperparameters and dataset specified in `configs/svm.yaml`; outputs are saved to `./output_svm_1` instead of the default `OUTPUT_DIR` in `svm.yaml`; hyperparameter `C`in `SVM` algorithm is changed to `6.0`. 
 
-*Arguments at the end of command line `OUTPUT_DIR "./output_svm_1"` allow overwriting config options.*
+_Arguments at the end of command line `OUTPUT_DIR "./output_svm_1"` allow overwriting config options._
 
 **Example 2: (tune hyperparameters)**
 ```
 python train_net.py --config-file configs/svm_tune.yaml OUTPUT_DIR "./output_svm_2"
 ```
-Above command: tune hyperparameters to get model settings with the best validation dataset performance, using hyperparameters choices in `svm_tune.yaml`.
+Above command: tune hyperparameters to get model settings with the best validation dataset performance, using hyperparameters choices in `configs/svm_tune.yaml`.
 
 ### Evaluation
 FIXME
 ### Prediction
 FIXME
 ## Model Zoo and Baselines
-*NOTE: The following performance table and confusion matrices are generated based on raw data provided by July 19th, 2021.*
+_NOTE: The following performance table and confusion matrices are generated based on raw data provided by July 19th, 2021._
 
 We performed five tuning hyperparameters runs and picked the hyperparameters set with the highest validation accuracy as default (default yaml configs) for each algorithm. Then we trained each algorithm with these default hyperparameters set five times and averaged the accuracy and confusion matrix as follows.
 
