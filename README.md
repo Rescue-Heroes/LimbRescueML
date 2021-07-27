@@ -14,9 +14,9 @@ FIXME
 ### Data Preprocessing
 Script [`generate_dataset.py`](generate_dataset.py) preprocesses selected raw data, and splits preprocessed data into train, validation, test datasets.
 
-See `python generate_dataset.py --help` for arguments options.
-- Preprocessing options include: "normalized", "first_order", "second_order"
-- Split methods inlcude: "random", "random_balanced"
+See `python generate_dataset.py --help` for arguments options. Script details can be found in [docs/generate_dataset.md](docs/generate_dataset.md)
+- Preprocessing options include: `"normalized"`, `"first_order"`, `"second_order"`
+- Split methods inlcude: `"random"`, `"random_balanced"`
 
 **Example:**
 ```
